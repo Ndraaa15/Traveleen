@@ -1,11 +1,9 @@
 package handler
 
 import (
-	"fmt"
 	"gin/src/middleware"
 	"gin/src/usecase"
 	"net/http"
-	"os"
 	"sync"
 
 	"github.com/gin-gonic/gin"
@@ -68,5 +66,5 @@ func (h *Handler) RoutesAndMiddleware() {
 }
 
 func (h *Handler) Run() {
-	h.http.Run(fmt.Sprintf(":%s", os.Getenv("APP_PORT")))
+	h.http.Run()
 }
