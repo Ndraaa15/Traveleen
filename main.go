@@ -8,6 +8,7 @@ import (
 	"gin/src/repository"
 	"gin/src/usecase"
 	"log"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -33,7 +34,7 @@ func main() {
 
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"message": "Hello world!",
+			"message": os.Getenv("JWT_SIGN"),
 		})
 	})
 
