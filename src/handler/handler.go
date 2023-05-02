@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"sync"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -32,6 +33,10 @@ func (h *Handler) RoutesAndMiddleware() {
 			"message": "Hello world",
 		})
 	})
+
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	h.http.Use(cors.New(config))
 
 	v1 := h.http.Group("/api/v1")
 
