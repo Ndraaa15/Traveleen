@@ -10,16 +10,12 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
 var Router *gin.Engine
 
 func main() {
 	r := gin.Default()
-	if err := godotenv.Load(".env"); err != nil {
-		log.Fatal("Failed to load .env")
-	}
 
 	db, err := mysql.SqlInit()
 
