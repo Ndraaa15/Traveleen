@@ -17,7 +17,7 @@ var Router *gin.Engine
 
 func main() {
 	r := gin.Default()
-	if err := godotenv.Load(); err != nil {
+	if err := godotenv.Load(".env"); err != nil {
 		log.Fatal("Failed to load .env")
 	}
 
