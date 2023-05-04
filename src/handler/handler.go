@@ -23,12 +23,6 @@ func InitHandler(uc *usecase.Usecase) *Handler {
 		r.http = gin.Default()
 		r.uc = uc
 		r.RoutesAndMiddleware()
-		r.http.Use(cors.New(cors.Config{
-			AllowAllOrigins:  true,
-			AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE"},
-			AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
-			AllowCredentials: true,
-		}))
 	})
 	return &r
 }
@@ -39,6 +33,13 @@ func (h *Handler) RoutesAndMiddleware() {
 			"message": "Hello world",
 		})
 	})
+
+	h.http.Use(cors.New(cors.Config{
+		AllowAllOrigins:  true,
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE"},
+		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
+		AllowCredentials: true,
+	}))
 
 	v1 := h.http.Group("/api/v1")
 
