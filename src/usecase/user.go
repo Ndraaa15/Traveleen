@@ -17,6 +17,7 @@ type UserInterface interface {
 	Login(ctx context.Context, userInput model.UserLogin) (model.UserLoginResponse, error)
 	Update(ctx context.Context, userInput model.UserUpdate, userID uint) (entity.User, error)
 	UploadPhotoProfile(ctx context.Context, userID uint, photoProfile *multipart.FileHeader) (entity.User, error)
+	Profile(ctx context.Context, userID uint) (entity.User, error)
 }
 
 type User struct {
@@ -133,4 +134,13 @@ func (uc *User) UploadPhotoProfile(ctx context.Context, userID uint, photoProfil
 	}
 
 	return userUpdated, nil
+}
+
+func (uc *User) Profile(ctx context.Context, userID uint) (entity.User, error) {
+	user, err := uc.userRepo.GetUserByID(ctx, userID)
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
 }

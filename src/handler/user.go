@@ -115,5 +115,24 @@ func (h *Handler) UploadComment(ctx *gin.Context) {
 		message.ErrorResponse(ctx, http.StatusBadRequest, "Error while parse string into uint", err.Error())
 		return
 	}
+}
 
+func (h *Handler) GetProfile(ctx *gin.Context) {
+	user, exist := ctx.Get("user")
+
+	if !exist {
+		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to load JWT token, please try again!", nil)
+		return
+	}
+
+	userID := user.(uint)
+
+	user, err := h.uc.User.Profile(ctx.Request.Context(), userID)
+
+	if err != nil {
+		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to get user profile", nil)
+		return
+	}
+
+	message.SuccessResponse(ctx, http.StatusOK, "User Found!", user)
 }

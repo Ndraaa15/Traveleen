@@ -44,6 +44,7 @@ func (h *Handler) RoutesAndMiddleware() {
 	user.POST("/signup", h.UserRegister) //new user signup
 	user.POST("/login", h.UserLogin)     //user login
 	user.Use(middleware.IsUserLoggedIn).
+		GET("/profile", h.GetProfile).
 		PUT("/update", h.UserUpdate).               //user update profile without photo profile
 		POST("/upload/photo", h.UploadPhotoProfile) //user upload photo profile
 
