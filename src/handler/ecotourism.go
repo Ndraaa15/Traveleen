@@ -2,10 +2,10 @@ package handler
 
 import (
 	"fmt"
-	"gin/sdk/message"
-	"gin/src/model"
 	"net/http"
 	"strconv"
+	"gin/sdk/message"
+	"gin/src/model"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,7 +18,7 @@ func (h *Handler) PostTourism(ctx *gin.Context) {
 		return
 	}
 
-	ecotourism, err := h.uc.EcoTourism.PostEcotourism(ctx.Request.Context(), newEcotourism)
+	ecotourism, err := h.uc.EcoTourism.Create(ctx.Request.Context(), newEcotourism)
 
 	if err != nil {
 		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to post tourism", err.Error())
@@ -29,7 +29,7 @@ func (h *Handler) PostTourism(ctx *gin.Context) {
 }
 
 func (h *Handler) GetAllTourism(ctx *gin.Context) {
-	ecotourisms, err := h.uc.EcoTourism.GetAllTourisms(ctx.Request.Context())
+	ecotourisms, err := h.uc.EcoTourism.GetAll(ctx.Request.Context())
 	if err != nil {
 		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to get all tourisms", err.Error())
 	}
@@ -45,7 +45,7 @@ func (h *Handler) GetTourismByID(ctx *gin.Context) {
 		return
 	}
 
-	ecotourism, err := h.uc.EcoTourism.GetTourismByID(ctx.Request.Context(), uint(ecoID))
+	ecotourism, err := h.uc.EcoTourism.GetByID(ctx.Request.Context(), uint(ecoID))
 
 	if err != nil {
 		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to load tourism", err.Error())
@@ -57,7 +57,7 @@ func (h *Handler) GetTourismByID(ctx *gin.Context) {
 func (h *Handler) GetTourismByCategory(ctx *gin.Context) {
 	category := ctx.Param("category")
 	fmt.Println(category)
-	ecotourisms, err := h.uc.EcoTourism.GetTourismByCategory(ctx.Request.Context(), category)
+	ecotourisms, err := h.uc.EcoTourism.GetByCategory(ctx.Request.Context(), category)
 
 	if err != nil {
 		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to load tourism", err.Error())
@@ -82,7 +82,7 @@ func (h *Handler) GetTourismByPrice(ctx *gin.Context) {
 		return
 	}
 
-	ecotourisms, err := h.uc.EcoTourism.GetTourismByPrice(ctx.Request.Context(), sp, ep)
+	ecotourisms, err := h.uc.EcoTourism.GetByPrice(ctx.Request.Context(), sp, ep)
 
 	if err != nil {
 		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to load tourism", err.Error())
@@ -94,7 +94,7 @@ func (h *Handler) GetTourismByPrice(ctx *gin.Context) {
 func (h *Handler) GetTourismByRegion(ctx *gin.Context) {
 	region := ctx.Param("region")
 
-	ecotourisms, err := h.uc.EcoTourism.GetTourismByRegion(ctx.Request.Context(), region)
+	ecotourisms, err := h.uc.EcoTourism.GetByRegion(ctx.Request.Context(), region)
 
 	if err != nil {
 		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to load tourism", err.Error())

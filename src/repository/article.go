@@ -11,9 +11,9 @@ import (
 
 type ArticleInterface interface {
 	UploadThumbnail(ctx context.Context, thumbnail *multipart.FileHeader) (string, error)
-	CreateArticle(ctx context.Context, article entity.Article) (entity.Article, error)
-	GetAllArticle(ctx context.Context) ([]entity.Article, error)
-	GetArticleByID(ctx context.Context, articleID uint) (entity.Article, error)
+	Create(ctx context.Context, article entity.Article) (entity.Article, error)
+	GetAll(ctx context.Context) ([]entity.Article, error)
+	GetByID(ctx context.Context, articleID uint) (entity.Article, error)
 }
 
 type Article struct {
@@ -37,7 +37,7 @@ func (r *Article) UploadThumbnail(ctx context.Context, thumbnail *multipart.File
 	return link, nil
 }
 
-func (r *Article) CreateArticle(ctx context.Context, article entity.Article) (entity.Article, error) {
+func (r *Article) Create(ctx context.Context, article entity.Article) (entity.Article, error) {
 	if err := r.sql.Debug().WithContext(ctx).Create(&article).Error; err != nil {
 		return article, err
 	}
@@ -45,7 +45,7 @@ func (r *Article) CreateArticle(ctx context.Context, article entity.Article) (en
 	return article, nil
 }
 
-func (r *Article) GetAllArticle(ctx context.Context) ([]entity.Article, error) {
+func (r *Article) GetAll(ctx context.Context) ([]entity.Article, error) {
 	var articles []entity.Article
 	if err := r.sql.Debug().WithContext(ctx).Find(&articles).Error; err != nil {
 		return articles, err
@@ -54,7 +54,7 @@ func (r *Article) GetAllArticle(ctx context.Context) ([]entity.Article, error) {
 	return articles, nil
 }
 
-func (r *Article) GetArticleByID(ctx context.Context, articleID uint) (entity.Article, error) {
+func (r *Article) GetByID(ctx context.Context, articleID uint) (entity.Article, error) {
 	var article entity.Article
 	if err := r.sql.Debug().WithContext(ctx).Where("id = ?", articleID).First(&article).Error; err != nil {
 		return article, err

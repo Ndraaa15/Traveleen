@@ -2,16 +2,16 @@ package usecase
 
 import (
 	"context"
+	"gin/sdk/time"
 	"gin/src/entity"
-	"gin/src/model"
 	"gin/src/repository"
 	"mime/multipart"
 )
 
 type ArticleInterface interface {
-	CreateArticle(ctx context.Context, thumbnail *multipart.FileHeader, newArticle model.UploadArticle) (entity.Article, error)
-	GetAllArticle(ctx context.Context) ([]entity.Article, error)
-	GetArticleByID(ctx context.Context, articleID uint) (entity.Article, error)
+	Create(ctx context.Context, thumbnail *multipart.FileHeader, dataArticle []string, userID uint) (entity.Article, error)
+	GetAll(ctx context.Context) ([]entity.Article, error)
+	GetByID(ctx context.Context, articleID uint) (entity.Article, error)
 }
 
 type Article struct {
@@ -24,7 +24,7 @@ func InitArticle(articleRepo repository.ArticleInterface) ArticleInterface {
 	}
 }
 
-func (uc *Article) CreateArticle(ctx context.Context, thumbnail *multipart.FileHeader, newArticle model.UploadArticle) (entity.Article, error) {
+func (uc *Article) Create(ctx context.Context, thumbnail *multipart.FileHeader, dataArticle []string, userID uint) (entity.Article, error) {
 	var article entity.Article
 
 	link, err := uc.articleRepo.UploadThumbnail(ctx, thumbnail)
@@ -34,12 +34,14 @@ func (uc *Article) CreateArticle(ctx context.Context, thumbnail *multipart.FileH
 	}
 
 	article = entity.Article{
+		Date:      time.GenerateDate(),
 		Thumbnail: link,
-		Title:     newArticle.Title,
-		Body:      newArticle.Body,
+		Title:     dataArticle[0],
+		Body:      dataArticle[1],
+		UserID:    userID,
 	}
 
-	article, err = uc.articleRepo.CreateArticle(ctx, article)
+	article, err = uc.articleRepo.Create(ctx, article)
 
 	if err != nil {
 		return article, err
@@ -48,8 +50,8 @@ func (uc *Article) CreateArticle(ctx context.Context, thumbnail *multipart.FileH
 	return article, nil
 }
 
-func (uc *Article) GetAllArticle(ctx context.Context) ([]entity.Article, error) {
-	articles, err := uc.articleRepo.GetAllArticle(ctx)
+func (uc *Article) GetAll(ctx context.Context) ([]entity.Article, error) {
+	articles, err := uc.articleRepo.GetAll(ctx)
 
 	if err != nil {
 		return articles, err
@@ -58,8 +60,8 @@ func (uc *Article) GetAllArticle(ctx context.Context) ([]entity.Article, error) 
 	return articles, nil
 }
 
-func (uc *Article) GetArticleByID(ctx context.Context, articleID uint) (entity.Article, error) {
-	article, err := uc.articleRepo.GetArticleByID(ctx, articleID)
+func (uc *Article) GetByID(ctx context.Context, articleID uint) (entity.Article, error) {
+	article, err := uc.articleRepo.GetByID(ctx, articleID)
 
 	if err != nil {
 		return article, err

@@ -10,11 +10,18 @@ import (
 )
 
 type UserInterface interface {
-	CreateUser(ctx context.Context, user entity.User) (entity.User, error)
-	GetUserByEmail(ctx context.Context, email string) (entity.User, error)
-	UpdateUser(ctx context.Context, user entity.User) (entity.User, error)
-	GetUserByID(ctx context.Context, userID uint) (entity.User, error)
-	UploadPhotoProfile(ctx context.Context, PhotoUser *multipart.FileHeader) (string, error)
+	Create(ctx context.Context, user entity.User) (entity.User, error)
+	GetByEmail(ctx context.Context, email string) (entity.User, error)
+	Update(ctx context.Context, user entity.User) (entity.User, error)
+	GetByID(ctx context.Context, userID uint) (entity.User, error)
+	UploadPhotoProfile(PhotoUser *multipart.FileHeader) (string, error)
+	UploadPhotoComment(PhotoComment []*multipart.FileHeader) ([]string, error)
+	Comment(ctx context.Context, comment entity.Comment) (entity.Comment, error)
+	AddCart(ctx context.Context, userID uint) (entity.Cart, error)
+	UpdateCart(ctx context.Context, cart entity.Cart, userID uint) (entity.Cart, error)
+	DeleteCartContent(ctx context.Context, cartID uint, ecoID uint) error
+	GetCart(ctx context.Context, userID uint) (entity.Cart, error)
+	Delete(ctx context.Context, user entity.User) error
 }
 
 type User struct {
@@ -29,7 +36,7 @@ func InitUser(sql mysql.DB, supabase supabasestorageuploader.SupabaseClientServi
 	}
 }
 
-func (r *User) CreateUser(ctx context.Context, user entity.User) (entity.User, error) {
+func (r *User) Create(ctx context.Context, user entity.User) (entity.User, error) {
 	if err := r.sql.Debug().WithContext(ctx).Create(&user).Error; err != nil {
 		return user, err
 	}
@@ -37,7 +44,7 @@ func (r *User) CreateUser(ctx context.Context, user entity.User) (entity.User, e
 	return user, nil
 }
 
-func (r *User) GetUserByEmail(ctx context.Context, email string) (entity.User, error) {
+func (r *User) GetByEmail(ctx context.Context, email string) (entity.User, error) {
 	var user entity.User
 	if err := r.sql.Debug().WithContext(ctx).Where("email = ?", email).First(&user).Error; err != nil {
 		return user, err
@@ -45,14 +52,14 @@ func (r *User) GetUserByEmail(ctx context.Context, email string) (entity.User, e
 	return user, nil
 }
 
-func (r *User) UpdateUser(ctx context.Context, user entity.User) (entity.User, error) {
+func (r *User) Update(ctx context.Context, user entity.User) (entity.User, error) {
 	if err := r.sql.Debug().WithContext(ctx).Model(&user).Updates(user).Error; err != nil {
 		return user, err
 	}
 	return user, nil
 }
 
-func (r *User) GetUserByID(ctx context.Context, userID uint) (entity.User, error) {
+func (r *User) GetByID(ctx context.Context, userID uint) (entity.User, error) {
 	var user entity.User
 	if err := r.sql.Debug().WithContext(ctx).Where("ID = ?", userID).First(&user).Error; err != nil {
 		return user, err
@@ -60,11 +67,70 @@ func (r *User) GetUserByID(ctx context.Context, userID uint) (entity.User, error
 	return user, nil
 }
 
-func (r *User) UploadPhotoProfile(ctx context.Context, PhotoUser *multipart.FileHeader) (string, error) {
+func (r *User) UploadPhotoProfile(PhotoUser *multipart.FileHeader) (string, error) {
 	link, err := r.supabase.Upload(PhotoUser)
 	if err != nil {
 		return "", err
 	}
 
 	return link, nil
+}
+
+func (r *User) UploadPhotoComment(PhotoComment []*multipart.FileHeader) ([]string, error) {
+	linkPhoto := []string{}
+	for _, file := range PhotoComment {
+		link, err := r.supabase.Upload(file)
+		if err != nil {
+			return linkPhoto, err
+		}
+		linkPhoto = append(linkPhoto, link)
+	}
+
+	return linkPhoto, nil
+}
+
+func (r *User) Comment(ctx context.Context, comment entity.Comment) (entity.Comment, error) {
+	if err := r.sql.Debug().WithContext(ctx).Create(&comment).Error; err != nil {
+		return comment, err
+	}
+
+	return comment, nil
+}
+
+func (r *User) AddCart(ctx context.Context, userID uint) (entity.Cart, error) {
+	var cart entity.Cart
+	if err := r.sql.Debug().WithContext(ctx).Preload("CartProduct").Where(entity.Cart{UserID: userID}).Attrs(entity.Cart{UserID: userID}).FirstOrCreate(&cart).Error; err != nil {
+		return cart, err
+	}
+	return cart, nil
+}
+
+func (r *User) UpdateCart(ctx context.Context, cart entity.Cart, userID uint) (entity.Cart, error) {
+	if err := r.sql.Debug().WithContext(ctx).Where("user_id = ?", userID).Save(&cart).Error; err != nil {
+		return cart, err
+	}
+	return cart, nil
+}
+
+func (r *User) GetCart(ctx context.Context, userID uint) (entity.Cart, error) {
+	var cart entity.Cart
+	if err := r.sql.Debug().WithContext(ctx).Preload("CartProduct").Where("user_id = ?", userID).First(&cart).Error; err != nil {
+		return cart, err
+	}
+	return cart, nil
+}
+
+func (r *User) DeleteCartContent(ctx context.Context, cartID uint, ecoID uint) error {
+	var product entity.CartProduct
+	if err := r.sql.Debug().WithContext(ctx).Where("eco_id = ? AND cart_id = ?", ecoID, cartID).Delete(&product).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *User) Delete(ctx context.Context, user entity.User) error {
+	if err := r.sql.Debug().WithContext(ctx).Delete(&user).Error; err != nil {
+		return err
+	}
+	return nil
 }

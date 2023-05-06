@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"fmt"
 	"gin/sdk/message"
 	"gin/src/model"
+	"mime/multipart"
 	"net/http"
 	"strconv"
 
@@ -106,15 +106,38 @@ func (h *Handler) UploadComment(ctx *gin.Context) {
 	}
 
 	userID := user.(uint)
-	fmt.Println(userID)
-	ecoIDStr := ctx.Param(":id")
-	ecoID, err := strconv.Atoi(ecoIDStr)
-	fmt.Println(ecoID)
 
+	ecoIDStr := ctx.Param("id")
+	ecoID, err := strconv.Atoi(ecoIDStr)
 	if err != nil {
 		message.ErrorResponse(ctx, http.StatusBadRequest, "Error while parse string into uint", err.Error())
 		return
 	}
+
+	form, err := ctx.MultipartForm()
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	files := form.File["thumbnail"]
+	rating := ctx.PostForm("rating")
+	body := ctx.PostForm("body")
+
+	photoComment := []*multipart.FileHeader{}
+	data := make([]string, 2)
+	data[0] = rating
+	data[1] = body
+
+	photoComment = append(photoComment, files...)
+
+	ecotourism, err := h.uc.User.Comment(ctx.Request.Context(), uint(ecoID), userID, photoComment, data)
+	if err != nil {
+		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to upload comment", err.Error())
+		return
+	}
+
+	message.SuccessResponse(ctx, http.StatusOK, "Comment successfully uploaded", ecotourism)
 }
 
 func (h *Handler) GetProfile(ctx *gin.Context) {
@@ -135,4 +158,104 @@ func (h *Handler) GetProfile(ctx *gin.Context) {
 	}
 
 	message.SuccessResponse(ctx, http.StatusOK, "User Found!", user)
+}
+
+func (h *Handler) AddCart(ctx *gin.Context) {
+	user, exist := ctx.Get("user")
+
+	if !exist {
+		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to load JWT token, please try again!", nil)
+		return
+	}
+
+	userID := user.(uint)
+
+	ecoIDStr := ctx.Param("id")
+	ecoID, err := strconv.Atoi(ecoIDStr)
+	if err != nil {
+		message.ErrorResponse(ctx, http.StatusBadRequest, "Error while parse string into uint", err.Error())
+		return
+	}
+
+	newProductCart := model.CartProduct{}
+
+	if err := ctx.ShouldBindJSON(&newProductCart); err != nil {
+		message.ErrorResponse(ctx, http.StatusBadRequest, "Failed to bind JSON", err.Error())
+		return
+	}
+
+	cart, err := h.uc.User.AddCart(ctx.Request.Context(), userID, uint(ecoID), newProductCart)
+
+	if err != nil {
+		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to add into cart", err.Error())
+		return
+	}
+
+	message.SuccessResponse(ctx, http.StatusOK, "Added to cart", cart)
+}
+
+func (h *Handler) GetCart(ctx *gin.Context) {
+	user, exist := ctx.Get("user")
+
+	if !exist {
+		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to load JWT token, please try again!", nil)
+		return
+	}
+
+	userID := user.(uint)
+
+	cart, err := h.uc.User.GetCart(ctx.Request.Context(), userID)
+
+	if err != nil {
+		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to get", err.Error())
+		return
+	}
+
+	message.SuccessResponse(ctx, http.StatusOK, "Cart found", cart)
+}
+
+func (h *Handler) DeleteCartContent(ctx *gin.Context) {
+	user, exist := ctx.Get("user")
+
+	if !exist {
+		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to load JWT token, please try again!", nil)
+		return
+	}
+
+	userID := user.(uint)
+
+	ecoIDStr := ctx.Param("id")
+	ecoID, err := strconv.Atoi(ecoIDStr)
+	if err != nil {
+		message.ErrorResponse(ctx, http.StatusBadRequest, "Error while parse string into uint", err.Error())
+		return
+	}
+	err = h.uc.User.DeleteCartContent(ctx.Request.Context(), userID, uint(ecoID))
+
+	if err != nil {
+		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to get", err.Error())
+		return
+	}
+
+	message.SuccessResponse(ctx, http.StatusOK, "Content deleted", nil)
+}
+
+func (h *Handler) DeleteAccount(ctx *gin.Context) {
+	user, exist := ctx.Get("user")
+
+	if !exist {
+		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to load JWT token, please try again!", nil)
+		return
+	}
+
+	userID := user.(uint)
+
+	err := h.uc.User.Delete(ctx.Request.Context(), userID)
+
+	if err != nil {
+		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to delete account", err.Error())
+		return
+	}
+
+	message.SuccessResponse(ctx, http.StatusOK, "Account deleted", nil)
 }

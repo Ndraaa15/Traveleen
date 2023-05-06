@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"gin/sdk/currency"
 	"gin/src/entity"
 	"gin/src/enum"
 	"gin/src/model"
@@ -13,8 +12,9 @@ import (
 )
 
 type TrashInterface interface {
-	ExchangeTrash(ctx context.Context, newTrash model.NewExchangeTrash, userID uint) (entity.Trash, error)
-	GetExchangeHistory(ctx context.Context, userID uint) ([]entity.Trash, error)
+	Exchange(ctx context.Context, newTrash model.NewExchangeTrash, userID uint) (entity.Trash, error)
+	GetHistory(ctx context.Context, userID uint) ([]entity.Trash, error)
+	ValidateCode(ctx context.Context, inputCode model.ValidateCode) (entity.Trash, error)
 }
 
 type Trash struct {
@@ -29,7 +29,7 @@ func InitTrash(trashRepo repository.TrashInterface, userRepo repository.UserInte
 	}
 }
 
-func (uc *Trash) ExchangeTrash(ctx context.Context, newTrash model.NewExchangeTrash, userID uint) (entity.Trash, error) {
+func (uc *Trash) Exchange(ctx context.Context, newTrash model.NewExchangeTrash, userID uint) (entity.Trash, error) {
 
 	var trash entity.Trash
 
@@ -61,29 +61,28 @@ func (uc *Trash) ExchangeTrash(ctx context.Context, newTrash model.NewExchangeTr
 		exchangeTotal *= 5000
 	}
 
-	trash.Location = newTrash.Location
+	user, err1 := uc.userRepo.GetByID(ctx, userID)
+
+	trash.Location = "-"
 	trash.Mass = newTrash.Mass
 	trash.Code = uniqueCode
 	trash.Status = enum.Menunggu
 	trash.ExchangeTotal = exchangeTotal
 	trash.UserID = userID
 
-	user, err1 := uc.userRepo.GetUserByID(ctx, userID)
-
 	if err1 != nil {
 		return trash, err1
 	}
 
-	walletNow := currency.ConvertRupiahIntoFloat(user.Wallet)
-	totalWallet := walletNow + exchangeTotal
-	user.Wallet = currency.FormatRupiah(totalWallet)
-	userUpdated, err2 := uc.userRepo.UpdateUser(ctx, user)
+	totalWallet := user.Wallet + exchangeTotal
+	user.Wallet = totalWallet
+	userUpdated, err2 := uc.userRepo.Update(ctx, user)
+	trash.User = userUpdated
 
 	if err2 != nil {
 		return trash, err2
 	}
-	trash.User = userUpdated
-	trash, err3 := uc.trashRepo.CreateExchange(ctx, trash)
+	trash, err3 := uc.trashRepo.Exchange(ctx, trash)
 
 	if err3 != nil {
 		return trash, err3
@@ -92,7 +91,7 @@ func (uc *Trash) ExchangeTrash(ctx context.Context, newTrash model.NewExchangeTr
 	return trash, nil
 }
 
-func (uc *Trash) GetExchangeHistory(ctx context.Context, userID uint) ([]entity.Trash, error) {
+func (uc *Trash) GetHistory(ctx context.Context, userID uint) ([]entity.Trash, error) {
 	trashes, err := uc.trashRepo.GetHistory(ctx, userID)
 
 	if err != nil {
@@ -100,4 +99,26 @@ func (uc *Trash) GetExchangeHistory(ctx context.Context, userID uint) ([]entity.
 	}
 
 	return trashes, nil
+}
+
+func (uc *Trash) ValidateCode(ctx context.Context, inputCode model.ValidateCode) (entity.Trash, error) {
+	trash, err := uc.trashRepo.GetByCode(ctx, inputCode.Code)
+
+	if err != nil {
+		return trash, err
+	}
+
+	if inputCode.IsSuccess {
+		trash.Status = enum.Berhasil
+	} else {
+		trash.Status = enum.Gagal
+	}
+
+	trash, err = uc.trashRepo.Update(ctx, trash)
+
+	if err != nil {
+		return trash, err
+	}
+
+	return trash, nil
 }

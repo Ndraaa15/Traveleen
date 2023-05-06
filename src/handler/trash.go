@@ -25,7 +25,7 @@ func (h *Handler) ExchangeTrash(ctx *gin.Context) {
 		return
 	}
 
-	trash, err := h.uc.Trash.ExchangeTrash(ctx, newTrash, userID)
+	trash, err := h.uc.Trash.Exchange(ctx, newTrash, userID)
 
 	if err != nil {
 		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to exchange trash", err.Error())
@@ -46,7 +46,7 @@ func (h *Handler) ExchangeTrashHistory(ctx *gin.Context) {
 
 	userID := user.(uint)
 
-	trashes, err := h.uc.Trash.GetExchangeHistory(ctx, userID)
+	trashes, err := h.uc.Trash.GetHistory(ctx, userID)
 
 	if err != nil {
 		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to load history", err.Error())
@@ -54,4 +54,22 @@ func (h *Handler) ExchangeTrashHistory(ctx *gin.Context) {
 	}
 
 	message.SuccessResponse(ctx, http.StatusOK, "History Found", trashes)
+}
+
+func (h *Handler) ValidateCode(ctx *gin.Context) {
+	code := model.ValidateCode{}
+
+	if err := ctx.ShouldBindJSON(&code); err != nil {
+		message.ErrorResponse(ctx, http.StatusBadRequest, "Failed to bind JSON", err.Error())
+		return
+	}
+
+	trash, err := h.uc.Trash.ValidateCode(ctx, code)
+
+	if err != nil {
+		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to validate code", err.Error())
+		return
+	}
+
+	message.SuccessResponse(ctx, http.StatusOK, "Validate success", trash)
 }

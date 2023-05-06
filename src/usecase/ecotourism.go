@@ -8,12 +8,12 @@ import (
 )
 
 type EcoTourismInterface interface {
-	PostEcotourism(ctx context.Context, newEcotourism model.PostEcotourisms) (entity.Ecotourism, error)
-	GetAllTourisms(ctx context.Context) ([]entity.Ecotourism, error)
-	GetTourismByID(ctx context.Context, ecoID uint) (entity.Ecotourism, error)
-	GetTourismByCategory(ctx context.Context, category string) ([]entity.Ecotourism, error)
-	GetTourismByRegion(ctx context.Context, region string) ([]entity.Ecotourism, error)
-	GetTourismByPrice(ctx context.Context, startPrice float64, endPrice float64) ([]entity.Ecotourism, error)
+	Create(ctx context.Context, newEcotourism model.PostEcotourisms) (entity.Ecotourism, error)
+	GetAll(ctx context.Context) ([]entity.Ecotourism, error)
+	GetByID(ctx context.Context, ecoID uint) (entity.Ecotourism, error)
+	GetByCategory(ctx context.Context, category string) ([]entity.Ecotourism, error)
+	GetByRegion(ctx context.Context, region string) ([]entity.Ecotourism, error)
+	GetByPrice(ctx context.Context, startPrice float64, endPrice float64) ([]entity.Ecotourism, error)
 }
 
 type EcoTourism struct {
@@ -26,7 +26,7 @@ func InitEcoTourism(ecotourismRepo repository.EcoTourismInterface) EcoTourismInt
 	}
 }
 
-func (uc *EcoTourism) PostEcotourism(ctx context.Context, newEcotourism model.PostEcotourisms) (entity.Ecotourism, error) {
+func (uc *EcoTourism) Create(ctx context.Context, newEcotourism model.PostEcotourisms) (entity.Ecotourism, error) {
 	var ecotourism entity.Ecotourism
 
 	ecotourism = entity.Ecotourism{
@@ -42,7 +42,7 @@ func (uc *EcoTourism) PostEcotourism(ctx context.Context, newEcotourism model.Po
 		Maps:            newEcotourism.Maps,
 	}
 
-	ecotourism, err := uc.ecotourismRepo.PostEcotourism(ctx, ecotourism)
+	ecotourism, err := uc.ecotourismRepo.Create(ctx, ecotourism)
 
 	if err != nil {
 		return ecotourism, err
@@ -51,8 +51,8 @@ func (uc *EcoTourism) PostEcotourism(ctx context.Context, newEcotourism model.Po
 	return ecotourism, nil
 }
 
-func (uc *EcoTourism) GetAllTourisms(ctx context.Context) ([]entity.Ecotourism, error) {
-	ecotourisms, err := uc.ecotourismRepo.GetAllTourisms(ctx)
+func (uc *EcoTourism) GetAll(ctx context.Context) ([]entity.Ecotourism, error) {
+	ecotourisms, err := uc.ecotourismRepo.GetAll(ctx)
 
 	if err != nil {
 		return ecotourisms, err
@@ -61,32 +61,32 @@ func (uc *EcoTourism) GetAllTourisms(ctx context.Context) ([]entity.Ecotourism, 
 	return ecotourisms, nil
 }
 
-func (uc *EcoTourism) GetTourismByID(ctx context.Context, ecoID uint) (entity.Ecotourism, error) {
-	ecotourism, err := uc.ecotourismRepo.GetTourismByID(ctx, ecoID)
+func (uc *EcoTourism) GetByID(ctx context.Context, ecoID uint) (entity.Ecotourism, error) {
+	ecotourism, err := uc.ecotourismRepo.GetByID(ctx, ecoID)
 	if err != nil {
 		return ecotourism, err
 	}
 	return ecotourism, nil
 }
 
-func (uc *EcoTourism) GetTourismByCategory(ctx context.Context, category string) ([]entity.Ecotourism, error) {
-	ecotourisms, err := uc.ecotourismRepo.GetTourismByCategory(ctx, category)
+func (uc *EcoTourism) GetByCategory(ctx context.Context, category string) ([]entity.Ecotourism, error) {
+	ecotourisms, err := uc.ecotourismRepo.GetByCategory(ctx, category)
 	if err != nil {
 		return ecotourisms, err
 	}
 	return ecotourisms, nil
 }
 
-func (uc *EcoTourism) GetTourismByRegion(ctx context.Context, region string) ([]entity.Ecotourism, error) {
-	ecotourisms, err := uc.ecotourismRepo.GetTourismByRegion(ctx, region)
+func (uc *EcoTourism) GetByRegion(ctx context.Context, region string) ([]entity.Ecotourism, error) {
+	ecotourisms, err := uc.ecotourismRepo.GetByRegion(ctx, region)
 	if err != nil {
 		return ecotourisms, err
 	}
 	return ecotourisms, nil
 }
 
-func (uc *EcoTourism) GetTourismByPrice(ctx context.Context, startPrice float64, endPrice float64) ([]entity.Ecotourism, error) {
-	ecotourisms, err := uc.ecotourismRepo.GetTourismByPrice(ctx, startPrice, endPrice)
+func (uc *EcoTourism) GetByPrice(ctx context.Context, startPrice float64, endPrice float64) ([]entity.Ecotourism, error) {
+	ecotourisms, err := uc.ecotourismRepo.GetByPrice(ctx, startPrice, endPrice)
 	if err != nil {
 		return ecotourisms, err
 	}

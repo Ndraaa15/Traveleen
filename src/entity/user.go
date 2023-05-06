@@ -9,7 +9,7 @@ type User struct {
 	Username     string      `json:"username" gorm:"unique"`
 	Email        string      `json:"email" gorm:"unique"`
 	Password     string      `json:"-"`
-	Wallet       string      `json:"wallet" `
+	Wallet       float64     `json:"wallet" `
 	PhotoProfile string      `json:"photo_profile"`
 	Contact      string      `json:"contact"`
 	Region       string      `json:"region"`

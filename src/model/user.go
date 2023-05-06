@@ -1,6 +1,10 @@
 package model
 
-import "gin/src/entity"
+import (
+	"gin/src/entity"
+
+	"gorm.io/datatypes"
+)
 
 type UserRegister struct {
 	Username string `json:"username" gorm:"unique" binding:"required"`
@@ -26,4 +30,14 @@ type UserUpdate struct {
 	Region   string `json:"region"`
 	Gender   bool   `json:"gender"`
 	Birthday string `json:"birthday"`
+}
+
+type UserComment struct {
+	Rating    float64        `json:"rating"`
+	Body      string         `json:"body"`
+	Thumbnail datatypes.JSON `json:"thumbnail" gorm:"type:json"`
+}
+
+type CartProduct struct {
+	Quantity uint `json:"quantity"`
 }
