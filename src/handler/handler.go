@@ -58,13 +58,6 @@ func (h *Handler) RoutesAndMiddleware() {
 		CORS
 	*/
 
-	h.http.Use(cors.New(cors.Config{
-		AllowAllOrigins:  true,
-		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE"},
-		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
-		AllowCredentials: true,
-	}))
-
 	/*
 		Endpoint for user
 	*/
