@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -56,17 +55,10 @@ func (h *Handler) RoutesAndMiddleware() {
 		Endpoint for user
 	*/
 
-	h.http.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE"},
-		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
-		AllowCredentials: true,
-	}))
-
 	user := h.http.Group(v1.BasePath() + "/user")
 	user.POST("/signup", h.UserRegister) //new user signup
 	user.POST("/login", h.UserLogin)     //user login
-	user.Use(middleware.IsUserLoggedIn).
+	user.Use(middleware.IsUserLoggedIn).Use(middleware.CORS).
 		GET("/profile", h.GetProfile).
 		DELETE("/delete", h.DeleteAccount).          //user delete account
 		PUT("/update", h.UserUpdate).                //user update profile without photo profile
@@ -75,7 +67,7 @@ func (h *Handler) RoutesAndMiddleware() {
 		GET("/history")                              //Get user booking history
 
 	eco := h.http.Group(v1.BasePath() + "/tourism")
-	eco.Use(middleware.IsUserLoggedIn).
+	eco.Use(middleware.IsUserLoggedIn).Use(middleware.CORS).
 		GET("/", h.GetAllTourism).                                       //get all eco tourism
 		GET("/:id", h.GetTourismByID).                                   //get eco tourism by id
 		GET("/filter/category/:category", h.GetTourismByCategory).       //get filtered eco tourism by category
@@ -86,18 +78,18 @@ func (h *Handler) RoutesAndMiddleware() {
 		DELETE("/del/:id/cart", h.DeleteCartContent)                     //Delete content cart
 
 	trash := h.http.Group(v1.BasePath() + "/trash")
-	trash.Use(middleware.IsUserLoggedIn).
+	trash.Use(middleware.IsUserLoggedIn).Use(middleware.CORS).
 		POST("/exchange", h.ExchangeTrash).              //exchange trash into coin
 		GET("/exchange/history", h.ExchangeTrashHistory) //get exchange trash history
 
 	article := h.http.Group(v1.BasePath() + "/article")
-	article.Use(middleware.IsUserLoggedIn).
+	article.Use(middleware.IsUserLoggedIn).Use(middleware.CORS).
 		GET("/", h.GetAllArticles).      //get all articles
 		GET(":id", h.GetArticleByID).    //get article by id
 		POST("/create", h.CreateArticle) //create a article
 
 	payment := h.http.Group(v1.BasePath() + "/payment")
-	payment.Use(middleware.IsUserLoggedIn).
+	payment.Use(middleware.IsUserLoggedIn).Use(middleware.CORS).
 		POST("/online"). //Payment gateway using online payment
 		POST("/coin")    //Payment gateway using traveleen coin
 }
