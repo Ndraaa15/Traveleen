@@ -44,12 +44,13 @@ func (h *Handler) RoutesAndMiddleware() {
 		CORS
 	*/
 	h.http.Use(middleware.CORS())
+
 	/*
 		Endpoint for not user
 	*/
 
-	h.http.POST(v1.BasePath()+"/tourism/create", h.PostTourism) //post ecotourism by admin
-	h.http.POST(v1.BasePath()+"/trash/validate", h.PostTourism) //validate exchange trash by admin
+	h.http.POST(v1.BasePath()+"/tourism/create", h.PostTourism)  //post ecotourism by admin
+	h.http.POST(v1.BasePath()+"/trash/validate", h.ValidateCode) //validate exchange trash by admin
 
 	/*
 		Endpoint for user
@@ -65,6 +66,8 @@ func (h *Handler) RoutesAndMiddleware() {
 		POST("/upload/photo", h.UploadPhotoProfile). //user upload photo
 		GET("/cart", h.GetCart).                     //Get user cart
 		GET("/history")                              //Get user booking history
+
+	h.http.Use(middleware.CORS())
 
 	eco := h.http.Group(v1.BasePath() + "/tourism")
 	eco.Use(middleware.IsUserLoggedIn).
