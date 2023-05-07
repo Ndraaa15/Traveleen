@@ -23,6 +23,7 @@ func InitHandler(uc *usecase.Usecase) *Handler {
 		r.http = gin.Default()
 		r.uc = uc
 		r.http.Use(cors.New(cors.Config{
+			AllowOrigins:     []string{"*"},
 			AllowAllOrigins:  true,
 			AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE"},
 			AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
