@@ -40,7 +40,7 @@ func CORS() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		ctx.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:9000")
 		ctx.Writer.Header().Set("Access-Control-Allow-Methods", "*")
-		ctx.Writer.Header().Set("Access-Control-Allow-Headers", "Origin, Content-Length, Content-Type, Authorization")
+		ctx.Writer.Header().Set("Access-Control-Allow-Headers", "*")
 		ctx.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 
 		if ctx.Request.Method == "OPTIONS" {
