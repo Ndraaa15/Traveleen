@@ -43,7 +43,7 @@ func (h *Handler) RoutesAndMiddleware() {
 	/*
 		CORS
 	*/
-
+	h.http.Use(middleware.CORS())
 	/*
 		Endpoint for not user
 	*/
@@ -58,7 +58,7 @@ func (h *Handler) RoutesAndMiddleware() {
 	user := h.http.Group(v1.BasePath() + "/user")
 	user.POST("/signup", h.UserRegister) //new user signup
 	user.POST("/login", h.UserLogin)     //user login
-	user.Use(middleware.CORS()).Use(middleware.IsUserLoggedIn).
+	user.Use(middleware.IsUserLoggedIn).
 		GET("/profile", h.GetProfile).
 		DELETE("/delete", h.DeleteAccount).          //user delete account
 		PUT("/update", h.UserUpdate).                //user update profile without photo profile
@@ -67,7 +67,7 @@ func (h *Handler) RoutesAndMiddleware() {
 		GET("/history")                              //Get user booking history
 
 	eco := h.http.Group(v1.BasePath() + "/tourism")
-	eco.Use(middleware.CORS()).Use(middleware.IsUserLoggedIn).
+	eco.Use(middleware.IsUserLoggedIn).
 		GET("/", h.GetAllTourism).                                       //get all eco tourism
 		GET("/:id", h.GetTourismByID).                                   //get eco tourism by id
 		GET("/filter/category/:category", h.GetTourismByCategory).       //get filtered eco tourism by category
@@ -78,18 +78,18 @@ func (h *Handler) RoutesAndMiddleware() {
 		DELETE("/del/:id/cart", h.DeleteCartContent)                     //Delete content cart
 
 	trash := h.http.Group(v1.BasePath() + "/trash")
-	trash.Use(middleware.CORS()).Use(middleware.IsUserLoggedIn).
+	trash.Use(middleware.IsUserLoggedIn).
 		POST("/exchange", h.ExchangeTrash).              //exchange trash into coin
 		GET("/exchange/history", h.ExchangeTrashHistory) //get exchange trash history
 
 	article := h.http.Group(v1.BasePath() + "/article")
-	article.Use(middleware.CORS()).Use(middleware.IsUserLoggedIn).
+	article.Use(middleware.IsUserLoggedIn).
 		GET("/", h.GetAllArticles).      //get all articles
 		GET(":id", h.GetArticleByID).    //get article by id
 		POST("/create", h.CreateArticle) //create a article
 
 	payment := h.http.Group(v1.BasePath() + "/payment")
-	payment.Use(middleware.CORS()).Use(middleware.IsUserLoggedIn).
+	payment.Use(middleware.IsUserLoggedIn).
 		POST("/online"). //Payment gateway using online payment
 		POST("/coin")    //Payment gateway using traveleen coin
 }
