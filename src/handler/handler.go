@@ -22,13 +22,6 @@ func InitHandler(uc *usecase.Usecase) *Handler {
 	once.Do(func() {
 		r.http = gin.Default()
 		r.uc = uc
-		r.http.Use(cors.New(cors.Config{
-			AllowOrigins:     []string{"*"},
-			AllowAllOrigins:  true,
-			AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE"},
-			AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
-			AllowCredentials: true,
-		}))
 		r.RoutesAndMiddleware()
 
 	})
@@ -62,6 +55,14 @@ func (h *Handler) RoutesAndMiddleware() {
 	/*
 		Endpoint for user
 	*/
+
+	h.http.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowAllOrigins:  true,
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE"},
+		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
+		AllowCredentials: true,
+	}))
 
 	user := h.http.Group(v1.BasePath() + "/user")
 	user.POST("/signup", h.UserRegister) //new user signup
