@@ -58,7 +58,6 @@ func (h *Handler) RoutesAndMiddleware() {
 
 	h.http.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
-		AllowAllOrigins:  true,
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE"},
 		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
 		AllowCredentials: true,
