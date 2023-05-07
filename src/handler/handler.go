@@ -55,17 +55,16 @@ func (h *Handler) RoutesAndMiddleware() {
 	/*
 		Endpoint for user
 	*/
-
 	user := h.http.Group(v1.BasePath() + "/user")
 	user.POST("/signup", h.UserRegister) //new user signup
 	user.POST("/login", h.UserLogin)     //user login
-	user.Use(middleware.IsUserLoggedIn).
-		GET("/profile", h.GetProfile).
-		DELETE("/delete", h.DeleteAccount).          //user delete account
-		PUT("/update", h.UserUpdate).                //user update profile without photo profile
-		POST("/upload/photo", h.UploadPhotoProfile). //user upload photo
-		GET("/cart", h.GetCart).                     //Get user cart
-		GET("/history")                              //Get user booking history
+	user.Use(middleware.IsUserLoggedIn)
+	user.GET("/profile", h.GetProfile)
+	user.DELETE("/delete", h.DeleteAccount)          //user delete account
+	user.PUT("/update", h.UserUpdate)                //user update profile without photo profile
+	user.POST("/upload/photo", h.UploadPhotoProfile) //user upload photo
+	user.GET("/cart", h.GetCart)                     //Get user cart
+	user.GET("/history")                             //Get user booking history
 
 	h.http.Use(middleware.CORS())
 
