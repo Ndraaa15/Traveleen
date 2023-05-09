@@ -36,7 +36,7 @@ func (h *Handler) CreateArticle(ctx *gin.Context) {
 		return
 	}
 
-	message.SuccessResponse(ctx, http.StatusOK, "Success upload article", article)
+	message.SuccessResponse(ctx, http.StatusOK, "Success upload article", &article)
 }
 
 func (h *Handler) GetAllArticles(ctx *gin.Context) {
@@ -47,7 +47,7 @@ func (h *Handler) GetAllArticles(ctx *gin.Context) {
 		return
 	}
 
-	message.SuccessResponse(ctx, http.StatusOK, "Success upload article", articles)
+	message.SuccessResponse(ctx, http.StatusOK, "Success upload article", &articles)
 }
 
 func (h *Handler) GetArticleByID(ctx *gin.Context) {
@@ -67,5 +67,5 @@ func (h *Handler) GetArticleByID(ctx *gin.Context) {
 		return
 	}
 
-	message.SuccessResponse(ctx, http.StatusOK, "Success upload article", article)
+	message.SuccessResponse(ctx, http.StatusOK, "Success upload article", &article)
 }

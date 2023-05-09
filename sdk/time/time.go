@@ -54,7 +54,7 @@ func GenerateDate() string {
 		timeParts[2] = "Desember"
 	}
 
-	result := fmt.Sprintf("%s %s %s %s", timeParts[0], timeParts[1], timeParts[2], timeParts[3])
+	date := fmt.Sprintf("%s %s %s %s", timeParts[0], timeParts[1], timeParts[2], timeParts[3])
 
-	return result
+	return date
 }

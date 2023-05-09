@@ -12,16 +12,16 @@ func (h *Handler) ExchangeTrash(ctx *gin.Context) {
 	user, exist := ctx.Get("user")
 
 	if !exist {
-		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to load JWT token, please try again!", nil)
+		message.ErrorResponse(ctx, http.StatusUnauthorized, "Failed to get JWT token!", nil)
 		return
 	}
 
 	userID := user.(uint)
 
-	newTrash := model.NewExchangeTrash{}
+	newTrash := model.ExchangeTrash{}
 
 	if err := ctx.ShouldBindJSON(&newTrash); err != nil {
-		message.ErrorResponse(ctx, http.StatusBadRequest, "Failed to bind JSON", err.Error())
+		message.ErrorResponse(ctx, http.StatusUnprocessableEntity, "Failed to bind JSON", err.Error())
 		return
 	}
 
@@ -54,22 +54,4 @@ func (h *Handler) ExchangeTrashHistory(ctx *gin.Context) {
 	}
 
 	message.SuccessResponse(ctx, http.StatusOK, "History Found", trashes)
-}
-
-func (h *Handler) ValidateCode(ctx *gin.Context) {
-	code := model.ValidateCode{}
-
-	if err := ctx.ShouldBindJSON(&code); err != nil {
-		message.ErrorResponse(ctx, http.StatusBadRequest, "Failed to bind JSON", err.Error())
-		return
-	}
-
-	trash, err := h.uc.Trash.ValidateCode(ctx, code)
-
-	if err != nil {
-		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to validate code", err.Error())
-		return
-	}
-
-	message.SuccessResponse(ctx, http.StatusOK, "Validate success", trash)
 }

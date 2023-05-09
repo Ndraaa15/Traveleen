@@ -5,10 +5,12 @@ import (
 	"encoding/json"
 	"errors"
 	"gin/sdk/jwt"
+	"gin/sdk/numeric"
 	"gin/sdk/password"
 	"gin/sdk/time"
 	"gin/src/entity"
 	"gin/src/enum"
+	"gin/src/midtrans"
 	"gin/src/model"
 	"gin/src/repository"
 	"mime/multipart"
@@ -26,6 +28,8 @@ type UserInterface interface {
 	AddCart(ctx context.Context, userID uint, ecoID uint, newProductCart model.CartProduct) (entity.Cart, error)
 	GetCart(ctx context.Context, userID uint) (entity.Cart, error)
 	DeleteCartContent(ctx context.Context, userID uint, ecoID uint) error
+	Payment(ctx context.Context, userID uint, paymentType model.PaymentType) (model.PurchaseResponse, error)
+	PurchasesHistory(ctx context.Context, userID uint) ([]entity.Purchase, error)
 }
 
 type User struct {
@@ -46,7 +50,7 @@ func (uc *User) Register(ctx context.Context, userInput model.UserRegister) (ent
 	hashedPassword, err := password.GeneratePassword(userInput.Password)
 
 	if err != nil {
-		return user, err
+		return user, errors.New("FAILED TO GENERATE PASSWORD")
 	}
 
 	user = entity.User{
@@ -70,17 +74,17 @@ func (uc *User) Login(ctx context.Context, userInput model.UserLogin) (model.Use
 	user, err := uc.userRepo.GetByEmail(ctx, userInput.Email)
 
 	if err != nil {
-		return userResponse, err
+		return userResponse, errors.New("USER NOT FOUND")
 	}
 
 	if err := password.ComparePassword(user.Password, userInput.Password); err != nil {
-		return userResponse, err
+		return userResponse, errors.New("WRONG PASSWORD")
 	}
 
 	token, err := jwt.GenerateJWTToken(user)
 
 	if err != nil {
-		return userResponse, err
+		return userResponse, errors.New("FAILED TO GENERATE TOKEN")
 	}
 
 	userResponse.User = user
@@ -139,50 +143,69 @@ func (uc *User) Update(ctx context.Context, userInput model.UserUpdate, userID u
 }
 
 func (uc *User) UploadPhotoProfile(ctx context.Context, userID uint, photoProfile *multipart.FileHeader) (entity.User, error) {
-	link, err := uc.userRepo.UploadPhotoProfile(photoProfile)
+	linkPhoto, err := uc.userRepo.UploadPhotoProfile(photoProfile)
 	if err != nil {
-		return entity.User{}, err
+		return entity.User{}, errors.New("FAILED TO UPLOAD PHOTO")
 	}
 
 	user, err := uc.userRepo.GetByID(ctx, userID)
 	if err != nil {
-		return entity.User{}, err
+		return entity.User{}, errors.New("USER NOT FOUND")
 	}
 
-	user.PhotoProfile = link
+	user.PhotoProfile = linkPhoto
 
-	userUpdated, err := uc.userRepo.Update(ctx, user)
+	userUpdate, err := uc.userRepo.Update(ctx, user)
+
 	if err != nil {
-		return entity.User{}, err
+		return entity.User{}, errors.New("FAILED TO UPDATE USER")
 	}
 
-	return userUpdated, nil
+	return userUpdate, nil
 }
 
 func (uc *User) Profile(ctx context.Context, userID uint) (entity.User, error) {
 	user, err := uc.userRepo.GetByID(ctx, userID)
 	if err != nil {
-		return user, err
+		return user, errors.New("USER NOT FOUND")
 	}
 
 	return user, nil
+}
+
+func (uc *User) Delete(ctx context.Context, userID uint) error {
+	user, err := uc.userRepo.GetByID(ctx, userID)
+	if err != nil {
+		return err
+	}
+
+	err = uc.userRepo.Delete(ctx, user)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (uc *User) Comment(ctx context.Context, ecoID uint, userID uint, photoComment []*multipart.FileHeader, data []string) (entity.Ecotourism, error) {
 	var comment entity.Comment
 
 	linkPhoto, err := uc.userRepo.UploadPhotoComment(photoComment)
+
 	if err != nil {
-		return entity.Ecotourism{}, err
+		return entity.Ecotourism{}, errors.New("FAILED TO UPLOAD PHOTO")
 	}
+
 	jsonLinkPhoto, err := json.Marshal(linkPhoto)
+
 	if err != nil {
-		return entity.Ecotourism{}, err
+		return entity.Ecotourism{}, errors.New("FAILED TO MARSHAL JSON")
 	}
 
 	rating, err := strconv.ParseFloat(data[0], 64)
+
 	if err != nil {
-		return entity.Ecotourism{}, err
+		return entity.Ecotourism{}, errors.New("FAILED TO PARSE FLOAT")
 	}
 
 	comment = entity.Comment{
@@ -195,27 +218,31 @@ func (uc *User) Comment(ctx context.Context, ecoID uint, userID uint, photoComme
 	}
 
 	comment, err = uc.userRepo.Comment(ctx, comment)
+
 	if err != nil {
-		return entity.Ecotourism{}, err
+		return entity.Ecotourism{}, errors.New("FAILED TO CREATE COMMENT")
 	}
 
 	ecotourism, err := uc.ecoRepo.GetByID(ctx, ecoID)
 
 	if err != nil {
-		return entity.Ecotourism{}, err
+		return entity.Ecotourism{}, errors.New("ECOTOURISM NOT FOUND")
 	}
 
 	totalReview := ecotourism.TotalRatings + 1
 	tmp := ecotourism.Rating*float64(ecotourism.TotalRatings) + rating
 	totalRating := tmp / float64(totalReview)
 
-	ecotourism.TotalRatings = totalReview
-	ecotourism.Rating = totalRating
-	ecotourism.Comment = append(ecotourism.Comment, comment)
+	ecotourism = entity.Ecotourism{
+		TotalRatings: totalReview,
+		Rating:       numeric.RoundingRating(totalRating),
+		Comment:      append(ecotourism.Comment, comment),
+	}
 
-	ecotourism, err = uc.ecoRepo.Save(ctx, ecotourism)
+	ecotourism, err = uc.ecoRepo.Update(ctx, ecotourism)
+
 	if err != nil {
-		return entity.Ecotourism{}, err
+		return entity.Ecotourism{}, errors.New("FAILED TO UPDATE ECOTOURISM")
 	}
 
 	return ecotourism, nil
@@ -225,13 +252,15 @@ func (uc *User) AddCart(ctx context.Context, userID uint, ecoID uint, newCartPro
 	var cartProduct entity.CartProduct
 
 	cart, err := uc.userRepo.AddCart(ctx, userID)
+
 	if err != nil {
-		return cart, err
+		return cart, errors.New("FAILED TO CREATE CART")
 	}
 
 	ecotourism, err := uc.ecoRepo.GetByID(ctx, ecoID)
+
 	if err != nil {
-		return cart, err
+		return cart, errors.New("ECOTOURISM NOT FOUND")
 	}
 
 	cartProduct = entity.CartProduct{
@@ -249,12 +278,17 @@ func (uc *User) AddCart(ctx context.Context, userID uint, ecoID uint, newCartPro
 	for i, product := range cart.CartProduct {
 		if product.EcoID == ecoID && newCartProduct.Quantity != 0 {
 			cart.TotalPrice = cart.TotalPrice - product.Price
+
 			err := uc.userRepo.DeleteCartContent(ctx, cart.ID, ecoID)
+
 			if err != nil {
-				return cart, err
+				return cart, errors.New("FAILED TO DELETE CART CONTENT")
 			}
+
 			cart.CartProduct[i] = cartProduct
+
 			notFound = false
+
 			break
 		}
 	}
@@ -268,7 +302,7 @@ func (uc *User) AddCart(ctx context.Context, userID uint, ecoID uint, newCartPro
 	cart, err = uc.userRepo.UpdateCart(ctx, cart, userID)
 
 	if err != nil {
-		return cart, err
+		return cart, errors.New("FAILED TO UPDATE CART")
 	}
 
 	return cart, nil
@@ -278,7 +312,7 @@ func (uc *User) GetCart(ctx context.Context, userID uint) (entity.Cart, error) {
 	cart, err := uc.userRepo.GetCart(ctx, userID)
 
 	if err != nil {
-		return cart, err
+		return cart, errors.New("FAILED TO GET CART")
 	}
 
 	return cart, nil
@@ -288,7 +322,7 @@ func (uc *User) DeleteCartContent(ctx context.Context, userID uint, ecoID uint) 
 	cart, err := uc.userRepo.GetCart(ctx, userID)
 
 	if err != nil {
-		return err
+		return errors.New("FAILED TO GET CART")
 	}
 
 	for _, product := range cart.CartProduct {
@@ -301,27 +335,143 @@ func (uc *User) DeleteCartContent(ctx context.Context, userID uint, ecoID uint) 
 	cart, err = uc.userRepo.UpdateCart(ctx, cart, userID)
 
 	if err != nil {
-		return err
+		return errors.New("FAILED TO UPDATE CART")
 	}
 
 	err = uc.userRepo.DeleteCartContent(ctx, cart.ID, ecoID)
 
 	if err != nil {
-		return err
+		return errors.New("FAILED TO DELETE CART CONTENT")
 	}
+
 	return nil
 }
 
-func (uc *User) Delete(ctx context.Context, userID uint) error {
+func (uc *User) Payment(ctx context.Context, userID uint, paymentType model.PaymentType) (model.PurchaseResponse, error) {
+	var purchase entity.Purchase
+	var purchaseResponse model.PurchaseResponse
+	URL := "-"
+
 	user, err := uc.userRepo.GetByID(ctx, userID)
+
 	if err != nil {
-		return err
+		return purchaseResponse, errors.New("USER NOT FOUND")
 	}
 
-	err = uc.userRepo.Delete(ctx, user)
+	cart, err := uc.userRepo.GetCart(ctx, userID)
+
 	if err != nil {
-		return err
+		return purchaseResponse, errors.New("CART NOT FOUND")
 	}
 
-	return nil
+	if paymentType.IsOnlinePayment {
+		midtrans.InitializeSnapClient()
+		resp, err := midtrans.CreateTransaction(user, cart)
+		URL = resp.RedirectURL
+
+		if err != nil {
+			return purchaseResponse, errors.New("FAILED TO CREATE ONLINE TRANSACTION")
+		}
+
+		cart.TotalPrice = 0
+
+		_, err = uc.userRepo.UpdateCart(ctx, cart, userID)
+
+		if err != nil {
+			return purchaseResponse, errors.New("FAILED TO UPDATE CART")
+		}
+
+		for _, product := range cart.CartProduct {
+			purchase = entity.Purchase{
+				Date:        time.GenerateDate(),
+				Place:       product.EcoName + ", " + product.EcoLocation,
+				Quantity:    product.Quantity,
+				TotalPrice:  product.Price,
+				Code:        "-",
+				Status:      enum.Menunggu,
+				PayCategory: enum.Online,
+				UserID:      userID,
+			}
+
+			if err := uc.userRepo.DeleteCartContent(ctx, cart.ID, product.EcoID); err != nil {
+				return purchaseResponse, errors.New("FAILED TO DELETE CART CONTENT")
+			}
+
+			_, err = uc.userRepo.CreatePurchase(ctx, purchase)
+
+			if err != nil {
+				return purchaseResponse, errors.New("FAILED TO CREATE PURCHASE")
+			}
+		}
+
+	} else {
+
+		if user.Wallet < cart.TotalPrice {
+			return purchaseResponse, errors.New("INSUFFICIENT BALANCE")
+		}
+
+		user.Wallet = user.Wallet - cart.TotalPrice
+
+		_, err = uc.userRepo.Update(ctx, user)
+
+		if err != nil {
+			return purchaseResponse, errors.New("FAILED TO UPDATE USER")
+		}
+
+		cart.TotalPrice = 0
+
+		_, err = uc.userRepo.UpdateCart(ctx, cart, userID)
+
+		if err != nil {
+			return purchaseResponse, errors.New("FAILED TO UPDATE CART")
+		}
+
+		for _, product := range cart.CartProduct {
+			purchase = entity.Purchase{
+				Date:        time.GenerateDate(),
+				Place:       product.EcoName + ", " + product.EcoLocation,
+				Quantity:    product.Quantity,
+				TotalPrice:  product.Price,
+				Code:        "-",
+				Status:      enum.Menunggu,
+				PayCategory: enum.Coin,
+				UserID:      userID,
+			}
+
+			if err := uc.userRepo.DeleteCartContent(ctx, cart.ID, product.EcoID); err != nil {
+				return purchaseResponse, errors.New("FAILED TO DELETE CART CONTENT")
+			}
+
+			_, err = uc.userRepo.CreatePurchase(ctx, purchase)
+
+			if err != nil {
+				return purchaseResponse, errors.New("FAILED TO CREATE PURCHASE")
+			}
+		}
+	}
+
+	if paymentType.IsOnlinePayment {
+		purchaseResponse = model.PurchaseResponse{
+			IsSuccess:   "Payment Success",
+			PaymentType: "Online Payment",
+			URL:         URL,
+		}
+	} else {
+		purchaseResponse = model.PurchaseResponse{
+			IsSuccess:   "Payment Success",
+			PaymentType: "Coin Payment",
+			URL:         "-",
+		}
+	}
+	return purchaseResponse, nil
+}
+
+func (uc *User) PurchasesHistory(ctx context.Context, userID uint) ([]entity.Purchase, error) {
+	purchases, err := uc.userRepo.PurchasesHistory(ctx, userID)
+
+	if err != nil {
+		return purchases, errors.New("FAILED TO GET PURCHASES HISTORY")
+	}
+
+	return purchases, nil
 }

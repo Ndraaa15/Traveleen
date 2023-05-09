@@ -22,6 +22,8 @@ type UserInterface interface {
 	DeleteCartContent(ctx context.Context, cartID uint, ecoID uint) error
 	GetCart(ctx context.Context, userID uint) (entity.Cart, error)
 	Delete(ctx context.Context, user entity.User) error
+	CreatePurchase(ctx context.Context, purchase entity.Purchase) (entity.Purchase, error)
+	PurchasesHistory(ctx context.Context, userID uint) ([]entity.Purchase, error)
 }
 
 type User struct {
@@ -53,15 +55,22 @@ func (r *User) GetByEmail(ctx context.Context, email string) (entity.User, error
 }
 
 func (r *User) Update(ctx context.Context, user entity.User) (entity.User, error) {
-	if err := r.sql.Debug().WithContext(ctx).Save(&user).Error; err != nil {
+	if err := r.sql.Debug().WithContext(ctx).Where("id = ?", user.ID).Save(&user).Error; err != nil {
 		return user, err
 	}
 	return user, nil
 }
 
+func (r *User) Delete(ctx context.Context, user entity.User) error {
+	if err := r.sql.Debug().WithContext(ctx).Delete(&user).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func (r *User) GetByID(ctx context.Context, userID uint) (entity.User, error) {
 	var user entity.User
-	if err := r.sql.Debug().WithContext(ctx).Where("ID = ?", userID).First(&user).Error; err != nil {
+	if err := r.sql.Debug().WithContext(ctx).Where("id = ?", userID).First(&user).Error; err != nil {
 		return user, err
 	}
 	return user, nil
@@ -77,16 +86,16 @@ func (r *User) UploadPhotoProfile(PhotoUser *multipart.FileHeader) (string, erro
 }
 
 func (r *User) UploadPhotoComment(PhotoComment []*multipart.FileHeader) ([]string, error) {
-	linkPhoto := []string{}
+	linkPhotos := []string{}
 	for _, file := range PhotoComment {
 		link, err := r.supabase.Upload(file)
 		if err != nil {
-			return linkPhoto, err
+			return linkPhotos, err
 		}
-		linkPhoto = append(linkPhoto, link)
+		linkPhotos = append(linkPhotos, link)
 	}
 
-	return linkPhoto, nil
+	return linkPhotos, nil
 }
 
 func (r *User) Comment(ctx context.Context, comment entity.Comment) (entity.Comment, error) {
@@ -128,9 +137,20 @@ func (r *User) DeleteCartContent(ctx context.Context, cartID uint, ecoID uint) e
 	return nil
 }
 
-func (r *User) Delete(ctx context.Context, user entity.User) error {
-	if err := r.sql.Debug().WithContext(ctx).Delete(&user).Error; err != nil {
-		return err
+func (r *User) CreatePurchase(ctx context.Context, purchase entity.Purchase) (entity.Purchase, error) {
+	if err := r.sql.Debug().WithContext(ctx).Create(&purchase).Error; err != nil {
+		return purchase, err
 	}
-	return nil
+
+	return purchase, nil
+}
+
+func (r *User) PurchasesHistory(ctx context.Context, userID uint) ([]entity.Purchase, error) {
+	var purchases []entity.Purchase
+
+	if err := r.sql.Debug().WithContext(ctx).Where("user_id = ?", userID).Find(&purchases).Error; err != nil {
+		return purchases, err
+	}
+
+	return purchases, nil
 }

@@ -2,19 +2,17 @@ package usecase
 
 import (
 	"context"
+	"errors"
+	"gin/sdk/token"
 	"gin/src/entity"
 	"gin/src/enum"
 	"gin/src/model"
 	"gin/src/repository"
-	"strings"
-
-	"github.com/google/uuid"
 )
 
 type TrashInterface interface {
-	Exchange(ctx context.Context, newTrash model.NewExchangeTrash, userID uint) (entity.Trash, error)
+	Exchange(ctx context.Context, newTrash model.ExchangeTrash, userID uint) (entity.Trash, error)
 	GetHistory(ctx context.Context, userID uint) ([]entity.Trash, error)
-	ValidateCode(ctx context.Context, inputCode model.ValidateCode) (entity.Trash, error)
 }
 
 type Trash struct {
@@ -29,63 +27,47 @@ func InitTrash(trashRepo repository.TrashInterface, userRepo repository.UserInte
 	}
 }
 
-func (uc *Trash) Exchange(ctx context.Context, newTrash model.NewExchangeTrash, userID uint) (entity.Trash, error) {
-
+func (uc *Trash) Exchange(ctx context.Context, newTrash model.ExchangeTrash, userID uint) (entity.Trash, error) {
 	var trash entity.Trash
-
-	id := uuid.New()
-	uniqueCode := strings.ToUpper(id.String()[:8])
 
 	exchangeTotal := newTrash.Mass
 
 	if newTrash.Category == "Plastik" {
 		trash.Category = enum.Plastik
-		exchangeTotal *= 20000
+		exchangeTotal *= 2000
 	} else if newTrash.Category == "Kaca" {
 		trash.Category = enum.Kaca
-		exchangeTotal *= 50000
+		exchangeTotal *= 5000
 	} else if newTrash.Category == "Kertas" {
 		trash.Category = enum.Kertas
-		exchangeTotal *= 10000
+		exchangeTotal *= 1000
 	} else if newTrash.Category == "Eletronik" {
 		trash.Category = enum.Elektronik
-		exchangeTotal *= 100000
+		exchangeTotal *= 25000
 	} else if newTrash.Category == "Metal" {
 		trash.Category = enum.Metal
-		exchangeTotal *= 75000
+		exchangeTotal *= 15000
 	} else if newTrash.Category == "Kardus" {
 		trash.Category = enum.Kardus
-		exchangeTotal *= 20000
+		exchangeTotal *= 7000
 	} else if newTrash.Category == "Organik" {
 		trash.Category = enum.Organik
-		exchangeTotal *= 5000
+		exchangeTotal *= 2000
 	}
 
-	user, err1 := uc.userRepo.GetByID(ctx, userID)
-
-	trash.Location = "-"
-	trash.Mass = newTrash.Mass
-	trash.Code = uniqueCode
-	trash.Status = enum.Menunggu
-	trash.ExchangeTotal = exchangeTotal
-	trash.UserID = userID
-
-	if err1 != nil {
-		return trash, err1
+	trash = entity.Trash{
+		Location:      "-",
+		Mass:          newTrash.Mass,
+		Code:          token.GenerateToken(),
+		Status:        enum.Menunggu,
+		UserID:        userID,
+		ExchangeTotal: exchangeTotal,
 	}
 
-	totalWallet := user.Wallet + exchangeTotal
-	user.Wallet = totalWallet
-	userUpdated, err2 := uc.userRepo.Update(ctx, user)
-	trash.User = userUpdated
+	trash, err := uc.trashRepo.Exchange(ctx, trash)
 
-	if err2 != nil {
-		return trash, err2
-	}
-	trash, err3 := uc.trashRepo.Exchange(ctx, trash)
-
-	if err3 != nil {
-		return trash, err3
+	if err != nil {
+		return trash, errors.New("FAILED TO EXCHANGE TRASH")
 	}
 
 	return trash, nil
@@ -95,30 +77,8 @@ func (uc *Trash) GetHistory(ctx context.Context, userID uint) ([]entity.Trash, e
 	trashes, err := uc.trashRepo.GetHistory(ctx, userID)
 
 	if err != nil {
-		return trashes, err
+		return trashes, errors.New("FAILED TO GET EXCHANGE HISTORY")
 	}
 
 	return trashes, nil
-}
-
-func (uc *Trash) ValidateCode(ctx context.Context, inputCode model.ValidateCode) (entity.Trash, error) {
-	trash, err := uc.trashRepo.GetByCode(ctx, inputCode.Code)
-
-	if err != nil {
-		return trash, err
-	}
-
-	if inputCode.IsSuccess {
-		trash.Status = enum.Berhasil
-	} else {
-		trash.Status = enum.Gagal
-	}
-
-	trash, err = uc.trashRepo.Update(ctx, trash)
-
-	if err != nil {
-		return trash, err
-	}
-
-	return trash, nil
 }

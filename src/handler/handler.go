@@ -38,46 +38,36 @@ func (h *Handler) RoutesAndMiddleware() {
 
 	h.http.Use(middleware.CORS())
 
-	h.http.POST(v1.BasePath()+"/tourism/create", h.PostTourism)  //post ecotourism by admin
-	h.http.POST(v1.BasePath()+"/trash/validate", h.ValidateCode) //validate exchange trash by admin
-
 	user := h.http.Group(v1.BasePath() + "/user")
-	user.POST("/signup", h.UserRegister) //new user signup
-	user.POST("/login", h.UserLogin)     //user login
+	user.POST("/signup", h.UserRegister)
+	user.POST("/login", h.UserLogin)
 	user.Use(middleware.IsUserLoggedIn).
-		GET("/profile", h.GetProfile).               //user get profile
-		DELETE("/delete", h.DeleteAccount).          //user delete account
-		PUT("/update", h.UserUpdate).                //user update profile without photo profile
-		POST("/upload/photo", h.UploadPhotoProfile). //user upload photo
-		GET("/cart", h.GetCart).                     //Get user cart
-		GET("/history")                              //Get user booking history
+		GET("/profile", h.GetProfile).
+		DELETE("/delete", h.DeleteAccount).
+		PUT("/update", h.UserUpdate).
+		POST("/upload/photo", h.UploadPhotoProfile).
+		GET("/cart", h.GetCart).
+		GET("/history", h.PurchasesHistory).
+		POST("/payment", h.Payment)
 
 	eco := h.http.Group(v1.BasePath() + "/tourism")
 	eco.Use(middleware.IsUserLoggedIn).
-		GET("/", h.GetAllTourism).                                       //get all eco tourism
-		GET("/:id", h.GetTourismByID).                                   //get eco tourism by id
-		GET("/filter/category/:category", h.GetTourismByCategory).       //get filtered eco tourism by category
-		GET("/filter/price/:startPrice/:endPrice", h.GetTourismByPrice). //get filtered eco tourism by price
-		GET("/filter/region/:region", h.GetTourismByRegion).             //get filtered eco tourism by region
-		POST("/:id/comment", h.UploadComment).                           //comment on current eco tourism, id in here is id ecotourism
-		POST("/add/:id/cart", h.AddCart).                                //Add to cart
-		DELETE("/del/:id/cart", h.DeleteCartContent)                     //Delete content cart
+		GET("/", h.GetAllTourism).
+		GET("/:id", h.GetTourismByID).
+		POST("/:id/comment", h.UploadComment).
+		POST("/add/:id/cart", h.AddCart).
+		DELETE("/del/:id/cart", h.DeleteCartContent)
 
 	trash := h.http.Group(v1.BasePath() + "/trash")
 	trash.Use(middleware.IsUserLoggedIn).
-		POST("/exchange", h.ExchangeTrash).              //exchange trash into coin
-		GET("/exchange/history", h.ExchangeTrashHistory) //get exchange trash history
+		POST("/exchange", h.ExchangeTrash).
+		GET("/exchange/history", h.ExchangeTrashHistory)
 
 	article := h.http.Group(v1.BasePath() + "/article")
 	article.Use(middleware.IsUserLoggedIn).
-		GET("/", h.GetAllArticles).      //get all articles
-		GET(":id", h.GetArticleByID).    //get article by id
-		POST("/create", h.CreateArticle) //create a article
-
-	payment := h.http.Group(v1.BasePath() + "/payment")
-	payment.Use(middleware.IsUserLoggedIn).
-		POST("/online"). //Payment gateway using online payment
-		POST("/coin")    //Payment gateway using traveleen coin
+		GET("/", h.GetAllArticles).
+		GET(":id", h.GetArticleByID).
+		POST("/create", h.CreateArticle)
 }
 
 func (h *Handler) Run() {

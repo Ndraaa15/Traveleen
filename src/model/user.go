@@ -39,5 +39,15 @@ type UserComment struct {
 }
 
 type CartProduct struct {
-	Quantity uint `json:"quantity"`
+	Quantity uint `json:"quantity" binding:"required"`
+}
+
+type PaymentType struct {
+	IsOnlinePayment bool `json:"is_online_payment"`
+}
+
+type PurchaseResponse struct {
+	IsSuccess   string `json:"is_success"`
+	PaymentType string `json:"payment_type"`
+	URL         string `json:"url"`
 }

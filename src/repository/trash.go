@@ -11,8 +11,6 @@ import (
 type TrashInterface interface {
 	Exchange(ctx context.Context, trash entity.Trash) (entity.Trash, error)
 	GetHistory(ctx context.Context, userID uint) ([]entity.Trash, error)
-	GetByCode(ctx context.Context, code string) (entity.Trash, error)
-	Update(ctx context.Context, trash entity.Trash) (entity.Trash, error)
 }
 
 type Trash struct {
@@ -41,20 +39,4 @@ func (r *Trash) GetHistory(ctx context.Context, userID uint) ([]entity.Trash, er
 	}
 
 	return trashes, nil
-}
-
-func (r *Trash) GetByCode(ctx context.Context, code string) (entity.Trash, error) {
-	var trash entity.Trash
-	if err := r.sql.Debug().WithContext(ctx).Where("code = ?", code).First(&trash).Error; err != nil {
-		return trash, err
-	}
-
-	return trash, nil
-}
-
-func (r *Trash) Update(ctx context.Context, trash entity.Trash) (entity.Trash, error) {
-	if err := r.sql.Debug().WithContext(ctx).Model(&trash).Updates(trash).Error; err != nil {
-		return trash, err
-	}
-	return trash, nil
 }
