@@ -118,14 +118,15 @@ func (uc *User) Update(ctx context.Context, userInput model.UserUpdate, userID u
 	}
 
 	user = entity.User{
-		ID:       userID,
-		Email:    userInput.Email,
-		Username: userInput.Username,
-		Contact:  userInput.Contact,
-		Birthday: userInput.Birthday,
-		Gender:   userGender,
-		Region:   userInput.Region,
-		Password: userPassword,
+		ID:           userID,
+		Email:        userInput.Email,
+		Username:     userInput.Username,
+		Contact:      userInput.Contact,
+		Birthday:     userInput.Birthday,
+		Gender:       userGender,
+		Region:       userInput.Region,
+		Password:     userPassword,
+		PhotoProfile: user.PhotoProfile,
 	}
 
 	userUpdate, err := uc.userRepo.Update(ctx, user)
