@@ -28,10 +28,6 @@ func InitHandler(uc *usecase.Usecase) *Handler {
 }
 
 func (h *Handler) RoutesAndMiddleware() {
-	/*
-		Endpoint testing
-	*/
-
 	h.http.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "Hello world",
@@ -40,21 +36,11 @@ func (h *Handler) RoutesAndMiddleware() {
 
 	v1 := h.http.Group("/api/v1")
 
-	/*
-		CORS
-	*/
 	h.http.Use(middleware.CORS())
-
-	/*
-		Endpoint for not user
-	*/
 
 	h.http.POST(v1.BasePath()+"/tourism/create", h.PostTourism)  //post ecotourism by admin
 	h.http.POST(v1.BasePath()+"/trash/validate", h.ValidateCode) //validate exchange trash by admin
 
-	/*
-		Endpoint for user
-	*/
 	user := h.http.Group(v1.BasePath() + "/user")
 	user.POST("/signup", h.UserRegister) //new user signup
 	user.POST("/login", h.UserLogin)     //user login
@@ -65,8 +51,6 @@ func (h *Handler) RoutesAndMiddleware() {
 		POST("/upload/photo", h.UploadPhotoProfile). //user upload photo
 		GET("/cart", h.GetCart).                     //Get user cart
 		GET("/history")                              //Get user booking history
-
-	h.http.Use(middleware.CORS())
 
 	eco := h.http.Group(v1.BasePath() + "/tourism")
 	eco.Use(middleware.IsUserLoggedIn).

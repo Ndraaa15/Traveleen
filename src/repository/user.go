@@ -53,7 +53,7 @@ func (r *User) GetByEmail(ctx context.Context, email string) (entity.User, error
 }
 
 func (r *User) Update(ctx context.Context, user entity.User) (entity.User, error) {
-	if err := r.sql.Debug().WithContext(ctx).Model(&user).Updates(user).Error; err != nil {
+	if err := r.sql.Debug().WithContext(ctx).Save(&user).Error; err != nil {
 		return user, err
 	}
 	return user, nil

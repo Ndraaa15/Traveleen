@@ -90,38 +90,51 @@ func (uc *User) Login(ctx context.Context, userInput model.UserLogin) (model.Use
 }
 
 func (uc *User) Update(ctx context.Context, userInput model.UserUpdate, userID uint) (entity.User, error) {
+	var userGender enum.Gender
+	var userPassword string
+
 	user, err := uc.userRepo.GetByID(ctx, userID)
 
 	if err != nil {
-		return user, err
+		return user, errors.New("USER NOT FOUND")
 	}
-
-	user.Email = userInput.Email
-	user.Username = userInput.Username
-	user.Contact = userInput.Contact
-	user.Birthday = userInput.Birthday
 
 	if userInput.Gender {
-		user.Gender = enum.Pria
+		userGender = enum.Pria
 	} else {
-		user.Gender = enum.Wanita
+		userGender = enum.Wanita
 	}
 
-	user.Region = userInput.Region
+	if userInput.Password != "" {
+		updatedPass, err := password.GeneratePassword(userInput.Password)
 
-	updatedPass, err := password.GeneratePassword(userInput.Password)
-	if err != nil {
-		return user, err
+		if err != nil {
+			return user, errors.New("FAILED TO GENERATE PASSWORD")
+		}
+
+		userPassword = updatedPass
+	} else {
+		userPassword = user.Password
 	}
-	user.Password = updatedPass
 
-	userUpdated, err := uc.userRepo.Update(ctx, user)
+	user = entity.User{
+		ID:       userID,
+		Email:    userInput.Email,
+		Username: userInput.Username,
+		Contact:  userInput.Contact,
+		Birthday: userInput.Birthday,
+		Gender:   userGender,
+		Region:   userInput.Region,
+		Password: userPassword,
+	}
+
+	userUpdate, err := uc.userRepo.Update(ctx, user)
 
 	if err != nil {
 		return user, errors.New("FAILED UPDATE USER")
 	}
 
-	return userUpdated, nil
+	return userUpdate, nil
 }
 
 func (uc *User) UploadPhotoProfile(ctx context.Context, userID uint, photoProfile *multipart.FileHeader) (entity.User, error) {
