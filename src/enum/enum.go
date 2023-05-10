@@ -11,6 +11,7 @@ const (
 	AirTerjun EcoCategory = "Air Terjun"
 	Gunung    EcoCategory = "Gunung"
 	Danau     EcoCategory = "Danau"
+	Pulau     EcoCategory = "Pulau"
 	Lainnya   EcoCategory = "Lainnya"
 )
 
