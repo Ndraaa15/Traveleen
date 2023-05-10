@@ -15,7 +15,6 @@ import (
 var Router *gin.Engine
 
 func main() {
-
 	db, err := mysql.SqlInit()
 
 	if err != nil {

@@ -263,9 +263,15 @@ func (uc *User) AddCart(ctx context.Context, userID uint, ecoID uint, newCartPro
 		return cart, errors.New("ECOTOURISM NOT FOUND")
 	}
 
+	var images []interface{}
+	if err := json.Unmarshal([]byte(ecotourism.Thumbnail), &images); err != nil {
+		return cart, errors.New("FAILED TO UNMARSHAL JSON")
+	}
+
 	cartProduct = entity.CartProduct{
 		CartID:      cart.ID,
 		EcoID:       ecoID,
+		EcoImage:    images[0].(string),
 		EcoName:     ecotourism.Name,
 		EcoLocation: ecotourism.Region,
 		EcoCategory: ecotourism.Category,

@@ -13,6 +13,7 @@ type Cart struct {
 type CartProduct struct {
 	CartID      uint             `json:"cart_id" gorm:"primarykey"`
 	Cart        Cart             `json:"-" gorm:"foreignKey:CartID"`
+	EcoImage    string           `json:"eco_image"`
 	EcoID       uint             `json:"eco_id" gorm:"primarykey"`
 	Ecotourism  Ecotourism       `json:"-" gorm:"foreignKey:EcoID"`
 	EcoName     string           `json:"eco_name"`
