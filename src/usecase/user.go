@@ -251,7 +251,7 @@ func (uc *User) Comment(ctx context.Context, ecoID uint, userID uint, photoComme
 func (uc *User) AddCart(ctx context.Context, userID uint, ecoID uint, newCartProduct model.CartProduct) (entity.Cart, error) {
 	var cartProduct entity.CartProduct
 
-	if cartProduct.Quantity == 0 {
+	if newCartProduct.Quantity == 0 {
 		return entity.Cart{}, errors.New("QUANTITY CANNOT BE 0")
 	}
 
