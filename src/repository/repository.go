@@ -11,6 +11,8 @@ type Repository struct {
 	EcoTourism EcoTourismInterface
 	Trash      TrashInterface
 	Article    ArticleInterface
+	Cart       CartInterface
+	Purchase   PurchaseInterface
 }
 
 func InitRepository(sql mysql.DB, supabase supabasestorageuploader.SupabaseClientService) *Repository {
@@ -19,5 +21,7 @@ func InitRepository(sql mysql.DB, supabase supabasestorageuploader.SupabaseClien
 		EcoTourism: InitEcoTourism(sql, supabase),
 		Trash:      InitTrash(sql, supabase),
 		Article:    InitArticle(sql, supabase),
+		Cart:       InitCart(sql, supabase),
+		Purchase:   InitPurchase(sql, supabase),
 	}
 }

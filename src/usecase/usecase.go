@@ -7,6 +7,8 @@ type Usecase struct {
 	EcoTourism EcoTourismInterface
 	Trash      TrashInterface
 	Article    ArticleInterface
+	Cart       CartInterface
+	Purchase   PurchaseInterface
 }
 
 func InitUsecase(repo *repository.Repository) *Usecase {
@@ -15,5 +17,7 @@ func InitUsecase(repo *repository.Repository) *Usecase {
 		EcoTourism: InitEcoTourism(repo.EcoTourism),
 		Trash:      InitTrash(repo.Trash, repo.User),
 		Article:    InitArticle(repo.Article),
+		Cart:       InitCart(repo.Cart, repo.EcoTourism),
+		Purchase:   InitPurchase(repo.Purchase, repo.User, repo.Cart),
 	}
 }
