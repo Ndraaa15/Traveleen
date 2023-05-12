@@ -649,3 +649,133 @@ func (uc *Usecase) GenerateUserDummy(db *mysql.DB) {
 		db.Debug().Create(&purchase)
 	}
 }
+
+var body1 = `Liburan seringkali diidentikkan dengan kegiatan yang menyenangkan dan melepas penat, namun sayangnya, seringkali liburan juga berdampak negatif pada lingkungan. Terutama pada wisata alam yang rentan terhadap kerusakan karena tingkat kunjungan yang tinggi. Oleh karena itu, dalam artikel ini, kami akan memberikan tips dan trik untuk liburan seru di wisata alam tanpa merusak lingkungan.
+a) Pilih Wisata Alam yang Bertanggung Jawab
+Sebelum memutuskan destinasi liburan, pastikan tempat tersebut bertanggung jawab terhadap lingkungan. Cari informasi mengenai bagaimana tempat tersebut memperlakukan lingkungan sekitar dan apakah mereka memiliki program konservasi atau bukan. Pastikan juga tempat tersebut tidak melakukan praktik yang merusak lingkungan seperti pengambilan batu karang, membuang sampah sembarangan, dan lain-lain.
+b) Kurangi Penggunaan Plastik
+Plastik adalah salah satu bahan yang paling sulit diuraikan oleh lingkungan. Oleh karena itu, selama liburan di wisata alam, pastikan untuk mengurangi penggunaan plastik sebanyak mungkin. Bawa botol minum yang bisa diisi ulang, kantong belanja kain, dan piring serta gelas reusable untuk mengurangi penggunaan plastik sekali pakai.
+c) Jangan Membuang Sampah Sembarangan
+Ini adalah hal yang sangat penting dan sering diabaikan oleh wisatawan. Jangan pernah membuang sampah sembarangan, terutama di lingkungan alam yang rapuh. Selalu bawa sampahmu dan tempatkan di tempat sampah yang telah disediakan.
+d) Gunakan Transportasi Ramah Lingkungan
+Jika memungkinkan, gunakan transportasi ramah lingkungan seperti sepeda atau kendaraan listrik selama liburan di wisata alam. Selain ramah lingkungan, menggunakan transportasi ini juga dapat memberikan pengalaman liburan yang berbeda dan menyenangkan.
+e) Lakukan Aktivitas yang Bertanggung Jawab
+Selama berlibur di wisata alam, pastikan untuk melakukan aktivitas yang bertanggung jawab dan tidak merusak lingkungan seperti snorkeling atau menyelam dengan tidak menyentuh terumbu karang atau memancing secara bertanggung jawab.
+f) Tidak Mengambil Apapun dari Lingkungan
+Hindari mengambil atau memindahkan apapun dari lingkungan alam selama liburanmu. Ini termasuk mengambil batu karang, tanaman atau binatang dari alam liar. Ini dapat merusak keseimbangan ekosistem dan mempengaruhi habitat alam.
+g) Berpartisipasi dalam Kegiatan Konservasi
+Jika tempat yang kamu kunjungi memiliki program konservasi, berpartisipasi dalam kegiatan tersebut dapat menjadi pengalaman yang sangat berarti. Selain itu, ini juga dapat membantu memperbaiki kerusakan lingkungan dan memberikan manfaat bagi komunitas setempat.
+h) Pilih Penginapan yang Bertanggung Jawab
+Pilih penginapan yang bertanggung jawab terhadap lingkungan. Carilah penginapan yang memiliki program pengelolaan limbah dan air yang baik, serta mengurangi penggunaan bahan kimia berbahaya. Pastikan penginapanmu juga memiliki kebijakan untuk menjaga kebersihan lingkungan sekitar dan meminimalkan dampak lingkungan.
+i) Hormati Budaya dan Tradisi Lokal
+Ketika berkunjung ke wisata alam, pastikan untuk menghormati budaya dan tradisi lokal. Jangan melakukan tindakan yang mengganggu kehidupan masyarakat setempat atau merusak tempat suci dan situs bersejarah.
+j) Berbagi Pengalamanmu
+Setelah kembali dari liburan, jangan lupa untuk berbagi pengalamanmu dengan keluarga, teman, dan orang lain. Dengan cara ini, kamu dapat memberikan inspirasi kepada mereka untuk juga memilih liburan yang bertanggung jawab terhadap lingkungan.
+Liburan seru di wisata alam tanpa merusak lingkungan memang membutuhkan kesadaran dan komitmen dari setiap wisatawan. Namun, dengan menerapkan tips dan trik di atas, kamu dapat menikmati liburan yang menyenangkan sambil tetap menjaga kelestarian lingkungan dan memberikan manfaat bagi komunitas setempat. Selamat berlibur!
+`
+
+var body2 = `
+Sampah adalah masalah lingkungan yang sangat penting dan semakin menjadi-jadi di seluruh dunia. Saat ini, jumlah sampah yang dihasilkan semakin bertambah setiap harinya. Jika tidak dikelola dengan baik, sampah dapat menjadi bencana lingkungan dan membahayakan kesehatan manusia. Oleh karena itu, memilah sampah yang benar sangat penting untuk membantu mengurangi beban lingkungan. Berikut adalah beberapa cara memilah sampah yang benar:
+a) Mengenal Jenis Sampah
+Pertama-tama, kamu harus mengenal jenis sampah yang ada. Sampah terdiri dari dua jenis, yaitu sampah organik dan sampah anorganik. Sampah organik adalah sampah yang berasal dari bahan organik seperti sisa makanan, daun, dan lain-lain. Sedangkan sampah anorganik adalah sampah yang berasal dari bahan non-organik seperti kertas, plastik, logam, dan lain-lain.
+b) Membagi Sampah Menjadi Dua Bagian
+Setelah mengenal jenis sampah, kamu bisa membagi sampah menjadi dua bagian. Pertama, sampah organik, dan kedua sampah anorganik. Hal ini akan mempermudah kamu dalam memilah sampah.
+c) Menyediakan Wadah Sampah yang Terpisah
+Setelah membagi sampah menjadi dua bagian, kamu harus menyediakan wadah sampah yang terpisah untuk kedua jenis sampah tersebut. Wadah sampah organik bisa menggunakan wadah yang kedap udara atau kantong plastik khusus untuk sampah organik, sedangkan wadah sampah anorganik bisa menggunakan wadah khusus untuk plastik, logam, kertas dan sebagainya.
+d) enghindari Penggunaan Plastik Sekali Pakai
+Penggunaan plastik sekali pakai sangat merugikan lingkungan. Sebaiknya, hindari penggunaan plastik sekali pakai dan gunakan alternatif pengganti seperti kantong belanja kain atau bawa tempat makan sendiri ketika berpergian.
+e) Membuang Sampah dengan Benar
+Setelah memilah sampah, pastikan kamu membuang sampah dengan benar. Sampah organik bisa kamu komposkan sendiri di rumah, sedangkan sampah anorganik bisa kamu bawa ke tempat pembuangan sampah yang sudah disediakan oleh pemerintah.
+f) Melakukan Pengolahan Sampah yang Tepat
+Pengolahan sampah merupakan hal yang sangat penting untuk menjaga lingkungan. Pastikan sampah anorganik yang sudah kamu pisahkan untuk didaur ulang dan diproses sesuai dengan jenisnya. Selain itu, kamu juga bisa mengolah sampah organik menjadi pupuk kompos untuk keperluan pertanian.
+g) Mengajak Orang Lain untuk Memilah Sampah dengan Benar
+Selain memilah sampah sendiri, kamu juga bisa mengajak orang lain di sekitarmu untuk memilah sampah dengan benar. Dengan cara ini, kamu dapat membantu mengurangi beban lingkungan dan menciptakan lingkungan yang lebih bersih dan sehat.
+Memilah sampah yang benar merupakan langkah awal yang sangat penting dalam mengurangi beban lingkungan. Dengan memilah sampah dengan benar, kamu dapat membantu mengurangi jumlah sampah yang dihasilkan dan mencegah terjadinya pencemaran lingkungan. Selain itu, dengan memilah sampah yang benar, kamu juga dapat membantu memperpanjang umur daur ulang sampah dan menghemat penggunaan sumber daya alam yang terbatas.
+Selain itu, kamu juga dapat berkontribusi dalam mengurangi beban lingkungan dengan cara membeli produk yang ramah lingkungan, meminimalisir penggunaan bahan kimia berbahaya, dan melakukan tindakan-tindakan kecil lainnya yang dapat membantu menjaga lingkungan.
+Dalam mengelola sampah, penting untuk selalu meningkatkan kesadaran dan pengetahuan tentang pentingnya memilah sampah dengan benar dan mengelola sampah dengan tepat. Dengan melakukan tindakan yang sederhana seperti memilah sampah yang benar, kamu dapat membantu menciptakan dunia yang lebih hijau dan berkelanjutan bagi generasi mendatang.
+`
+
+var body3 = `
+Sampah plastik adalah salah satu jenis sampah yang paling sering ditemukan di seluruh dunia. Penggunaan plastik yang begitu meluas dan keterbatasan sistem pengolahan sampah yang ada membuat limbah plastik menjadi masalah lingkungan yang besar. Dampak negatif sampah plastik terhadap lingkungan sangatlah besar dan perlu kita pahami agar kita dapat mengambil tindakan yang tepat untuk mengurangi dampak buruknya. Berikut adalah beberapa dampak negatif sampah plastik terhadap lingkungan:
+a) Pencemaran Laut
+Salah satu dampak negatif sampah plastik terhadap lingkungan adalah pencemaran laut. Sampah plastik yang tidak terkelola dengan baik cenderung terbuang ke laut dan akhirnya menjadi ancaman bagi satwa laut dan ekosistem laut. Terlebih lagi, beberapa jenis plastik dapat membutuhkan waktu ratusan bahkan ribuan tahun untuk terurai di laut, sehingga dapat merusak lingkungan laut dalam jangka waktu yang lama.
+b) Pencemaran Udara
+Sampah plastik juga dapat mencemari udara jika dibakar atau terbakar secara tidak sengaja. Proses pembakaran plastik dapat melepaskan gas beracun yang berbahaya bagi kesehatan manusia dan lingkungan.
+c) Kerusakan Ekosistem Darat
+Sampah plastik juga dapat merusak ekosistem darat. Sampah plastik yang terbuang sembarangan dapat menjadi sarang bakteri dan virus yang dapat merusak tanah dan mempengaruhi kesehatan manusia. Selain itu, sampah plastik juga dapat mengganggu tumbuhan dan hewan di lingkungan sekitar.
+d) Bahaya bagi Satwa Liar
+Sampah plastik dapat menjadi bahaya bagi satwa liar. Beberapa satwa liar seperti burung dan mamalia laut dapat tertarik dengan sampah plastik dan mengira bahwa sampah tersebut adalah makanan. Akibatnya, satwa liar dapat terjebak atau terperangkap oleh sampah plastik dan akhirnya mati akibat tercekik atau kelaparan.
+e) Pemborosan Sumber Daya
+Pembuatan plastik memerlukan sumber daya alam yang besar, seperti minyak bumi, gas alam, dan air. Oleh karena itu, penggunaan plastik yang berlebihan akan memboroskan sumber daya alam yang terbatas dan meningkatkan risiko terjadinya perubahan iklim dan kerusakan lingkungan.
+Dampak negatif sampah plastik terhadap lingkungan sangatlah besar dan memerlukan tindakan yang serius untuk mengatasinya. Salah satu cara yang dapat dilakukan adalah dengan mengurangi penggunaan plastik sekali pakai dan memilah sampah dengan benar. Selain itu, juga perlu adanya upaya untuk meningkatkan kesadaran masyarakat akan pentingnya menjaga lingkungan dan mengelola sampah dengan benar. Dengan melakukan tindakan kecil seperti memilah sampah dan mengurangi penggunaan plastik sekali pakai, kita dapat membantu melindungi lingkungan dan menciptakan dunia yang lebih hijau dan berkelanjutan bagi kita dan generasi mendat
+
+`
+
+var body4 = `
+Wisata alam menjadi pilihan liburan yang populer bagi banyak orang. Selain menawarkan keindahan alam yang memukau, wisata alam juga dapat menjadi sumber inspirasi untuk belajar tentang pentingnya konservasi lingkungan. Berikut ini adalah 5 wisata alam terbaik yang dapat mengajarkan kita tentang pentingnya konservasi lingkungan:
+a) Taman Nasional Gunung Leuser
+Taman Nasional Gunung Leuser terletak di Sumatera Utara dan menjadi rumah bagi spesies-spesies hewan yang langka seperti orangutan, harimau, dan gajah. Wisatawan dapat belajar tentang upaya konservasi yang dilakukan untuk menjaga habitat satwa liar di Taman Nasional Gunung Leuser, seperti reboisasi dan pemulihan lahan. Selain itu, pengunjung juga dapat mengamati satwa-satwa langka tersebut dan memahami betapa pentingnya menjaga keberlangsungan hidup mereka.
+b) Taman Nasional Komodo
+Taman Nasional Komodo terletak di Nusa Tenggara Timur dan merupakan rumah bagi hewan purba, yaitu komodo. Wisatawan dapat belajar tentang upaya konservasi yang dilakukan untuk melindungi populasi komodo dari perburuan dan penangkapan liar. Selain itu, pengunjung juga dapat belajar tentang pentingnya menjaga ekosistem yang seimbang di sekitar Taman Nasional Komodo, seperti menjaga keberlangsungan tanaman dan hewan yang menjadi sumber makanan komodo.
+c) Taman Nasional Ujung Kulon
+Taman Nasional Ujung Kulon terletak di Banten dan menjadi tempat tinggal bagi spesies hewan yang terancam punah seperti badak Jawa dan banteng. Wisatawan dapat belajar tentang upaya konservasi yang dilakukan untuk menjaga populasi badak Jawa dan banteng, seperti pemantauan dan rehabilitasi habitat. Selain itu, pengunjung juga dapat belajar tentang pentingnya menjaga ekosistem hutan tropis yang menjadi habitat bagi spesies-spesies tersebut.
+d) Taman Nasional Bromo Tengger Semeru
+Taman Nasional Bromo Tengger Semeru terletak di Jawa Timur dan terkenal dengan pemandangan gunung berapi yang indah. Wisatawan dapat belajar tentang upaya konservasi yang dilakukan untuk melindungi lingkungan sekitar gunung berapi, seperti pemulihan lahan dan pengendalian erosi. Selain itu, pengunjung juga dapat belajar tentang pentingnya menjaga keberlangsungan sumber daya air dan tanah di sekitar Taman Nasional Bromo Tengger Semeru.
+e) Taman Nasional Bali Barat
+Taman Nasional Bali Barat terletak di Bali dan menjadi tempat tinggal bagi spesies-spesies hewan dan tumbuhan yang langka seperti rusa Bali dan banteng. Wisatawan dapat belajar tentang upaya konservasi yang dilakukan untuk menjaga populasi spesies-spesies tersebut, seperti pemulihan habitat dan perlindungan dari perburuan liar. Selain itu, pengunjung juga dapat belajar tentang pentingnya menjaga keberlangsungan mangrove di sekitar Taman Nasional Bali Barat.
+Dari kelima wisata alam tersebut, kita dapat belajar banyak tentang pentingnya menjaga lingkungan dan konservasi alam. Selain itu, kita juga dapat memahami dampak dari aktivitas manusia terhadap lingkungan dan bagaimana kita dapat mengambil langkah-langkah untuk mengurangi dampak tersebut. Berikut adalah beberapa hal yang dapat kita pelajari dari wisata alam yang mendukung konservasi lingkungan:
+a) Pentingnya menjaga keberlangsungan habitat alam
+Setiap spesies hewan dan tumbuhan memiliki peran penting dalam ekosistem alam. Ketika habitat alam mereka rusak atau hilang, maka seluruh ekosistem akan terganggu. Oleh karena itu, menjaga keberlangsungan habitat alam adalah hal yang sangat penting untuk dilakukan.
+b) Dampak perubahan iklim terhadap keanekaragaman hayati
+Perubahan iklim dapat memiliki dampak besar terhadap keanekaragaman hayati dan keseimbangan ekosistem. Peningkatan suhu dan cuaca yang ekstrem dapat mengganggu kehidupan hewan dan tumbuhan, serta memicu terjadinya bencana alam. Oleh karena itu, kita perlu mengambil tindakan untuk mengurangi emisi gas rumah kaca dan menerapkan praktik-praktik ramah lingkungan.
+c) Pentingnya menjaga keberlanjutan sumber daya alam
+Sumber daya alam seperti air, tanah, dan udara adalah hal yang sangat penting bagi kehidupan manusia dan makhluk hidup lainnya. Kita perlu mengambil tindakan untuk menjaga keberlanjutan sumber daya alam, seperti mengurangi penggunaan bahan-bahan kimia berbahaya dan melakukan daur ulang.
+d) Pentingnya mendukung upaya konservasi lingkungan
+Upaya konservasi lingkungan seperti pemulihan habitat dan perlindungan terhadap spesies-spesies langka adalah hal yang sangat penting untuk dilakukan. Kita dapat mendukung upaya-upaya tersebut dengan menjadi sukarelawan atau mendukung organisasi konservasi lingkungan.
+Dampak positif dari pariwisata berkelanjutan
+Pariwisata berkelanjutan dapat memberikan dampak positif bagi lingkungan dan masyarakat lokal. Wisatawan dapat membantu mempromosikan konservasi lingkungan dan memberikan dampak positif bagi ekonomi dan kehidupan masyarakat lokal.
+
+Dalam melakukan wisata alam, kita juga perlu memperhatikan etika lingkungan yang baik. Hindari membuang sampah sembarangan dan ikuti aturan yang berlaku di tempat wisata tersebut. Dengan melakukan hal-hal kecil seperti itu, kita dapat membantu mengurangi dampak negatif terhadap lingkungan dan memastikan keberlangsungan alam untuk generasi mendatang.
+
+`
+
+func (uc *Usecase) GenerateArticleDummy(db *mysql.DB) {
+	var articles = []entity.Article{
+		{
+			ID:        1,
+			Thumbnail: "https://arcudskzafkijqukfool.supabase.co/storage/v1/object/public/traveleen/images/Article1.jpg",
+			Date:      "Selasa, 15 Desember 2022",
+			Title:     "Liburan Seru di Wisata Alam Tanpa Merusak Lingkungan: Tips dan Trik",
+			Body:      body1,
+			UserID:    1,
+		},
+		{
+			ID:        2,
+			Thumbnail: "https://arcudskzafkijqukfool.supabase.co/storage/v1/object/public/traveleen/images/Article2.png",
+			Date:      "Rabu, 10 Januari 2022",
+			Title:     "Cara Memilah Sampah yang Benar: Membantu Mengurangi Beban Lingkungan",
+			Body:      body2,
+			UserID:    2,
+		},
+		{
+			ID:        3,
+			Thumbnail: "https://arcudskzafkijqukfool.supabase.co/storage/v1/object/public/traveleen/images/Article3.jpg",
+			Date:      "Kamis, 9 April 2022",
+			Title:     "Memahami Dampak Negatif Sampah Plastik Terhadap Lingkungan",
+			Body:      body3,
+			UserID:    3,
+		},
+		{
+			ID:        4,
+			Thumbnail: "https://arcudskzafkijqukfool.supabase.co/storage/v1/object/public/traveleen/images/Article4.jpg",
+			Date:      "Jumat, 11 November 2022",
+			Title:     "5 Wisata Alam Terbaik yang Dapat Mengajarkan Kita Tentang Pentingnya Konservasi Lingkungan",
+			Body:      body4,
+			UserID:    2,
+		},
+	}
+
+	for _, article := range articles {
+		db.Debug().Create(&article)
+	}
+}

@@ -55,6 +55,15 @@ func main() {
 		usecase.GenerateUserDummy(db)
 	}
 
+	var totalArticle int64
+	if err := db.Model(&entity.Article{}).Count(&totalArticle).Error; err != nil {
+		log.Fatal(err.Error())
+	}
+
+	if totalArticle == 0 {
+		usecase.GenerateArticleDummy(db)
+	}
+
 	handler := handler.InitHandler(usecase)
 
 	handler.Run()
