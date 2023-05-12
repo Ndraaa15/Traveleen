@@ -280,14 +280,14 @@ func (uc *User) AddCart(ctx context.Context, userID uint, ecoID uint, newCartPro
 		EcoLocation: ecotourism.Region,
 		EcoCategory: ecotourism.Category,
 		Quantity:    newCartProduct.Quantity,
-		Price:       (ecotourism.Price * float64(newCartProduct.Quantity)),
+		Price:       ecotourism.Price,
 	}
 
 	notFound := true
 
 	for i, product := range cart.CartProduct {
 		if product.EcoID == ecoID && newCartProduct.Quantity != 0 {
-			cart.TotalPrice = cart.TotalPrice - product.Price
+			cart.TotalPrice = cart.TotalPrice - (product.Price * float64(product.Quantity))
 
 			err := uc.userRepo.DeleteCartContent(ctx, cart.ID, ecoID)
 
@@ -307,7 +307,7 @@ func (uc *User) AddCart(ctx context.Context, userID uint, ecoID uint, newCartPro
 		cart.CartProduct = append(cart.CartProduct, cartProduct)
 	}
 
-	cart.TotalPrice = cart.TotalPrice + cartProduct.Price
+	cart.TotalPrice = cart.TotalPrice + (cartProduct.Price * float64(cartProduct.Quantity))
 
 	cart, err = uc.userRepo.UpdateCart(ctx, cart, userID)
 
