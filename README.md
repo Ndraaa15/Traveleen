@@ -19,7 +19,7 @@ Gede Indra Adi Brata</br>
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E) 
 ![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)
 ![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white)
-<img width="88" height="24" alt="Railway" src="https://github.com/Ndraaa15/Traveleen/assets/112854205/23b5a70f-ae3c-48cc-af2a-aa5bd7f9b484">
+<img width="88" height="28" alt="Railway" src="https://github.com/Ndraaa15/Traveleen/assets/112854205/23b5a70f-ae3c-48cc-af2a-aa5bd7f9b484">
 
 
 
