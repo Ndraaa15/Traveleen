@@ -14,5 +14,5 @@ type Trash struct {
 	Status        enum.Status        `json:"status"`
 	ExchangeTotal float64            `json:"exchange_totals"`
 	UserID        uint               `json:"user_id"`
-	User          User               `gorm:"foreignKey:UserID"`
+	User          User               `json:"-" gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE"`
 }

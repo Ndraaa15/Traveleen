@@ -3,7 +3,6 @@ package usecase
 import (
 	"context"
 	"errors"
-	"gin/sdk/time"
 	"gin/sdk/token"
 	"gin/src/entity"
 	"gin/src/enum"
@@ -58,7 +57,7 @@ func (uc *Trash) Exchange(ctx context.Context, newTrash model.ExchangeTrash, use
 	}
 
 	trash = entity.Trash{
-		Date:          time.GenerateDate(),
+		Date:          "-",
 		Location:      "-",
 		Category:      category,
 		Mass:          newTrash.Mass,

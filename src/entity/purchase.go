@@ -13,5 +13,5 @@ type Purchase struct {
 	Status      enum.Status      `json:"status"`
 	PayCategory enum.PayCategory `json:"pay_category"`
 	UserID      uint             `json:"user_id"`
-	User        User             `json:"-" gorm:"foreignKey:UserID"`
+	User        User             `json:"-" gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE"`
 }

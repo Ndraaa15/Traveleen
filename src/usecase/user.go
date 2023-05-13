@@ -202,19 +202,20 @@ func (uc *User) Comment(ctx context.Context, ecoID uint, userID uint, photoComme
 		return entity.Ecotourism{}, errors.New("FAILED TO PARSE FLOAT")
 	}
 
+	user, err := uc.userRepo.GetByID(ctx, userID)
+
+	if err != nil {
+		return entity.Ecotourism{}, errors.New("USER NOT FOUND")
+	}
+
 	comment = entity.Comment{
 		Date:         time.GenerateDate(),
 		UserID:       userID,
+		User:         user,
 		EcotourismID: ecoID,
 		Rating:       rating,
 		Body:         data[1],
 		Thumbnail:    jsonLinkPhoto,
-	}
-
-	comment, err = uc.userRepo.Comment(ctx, comment)
-
-	if err != nil {
-		return entity.Ecotourism{}, errors.New("FAILED TO CREATE COMMENT")
 	}
 
 	ecotourism, err := uc.ecoRepo.GetByID(ctx, ecoID)
@@ -227,11 +228,9 @@ func (uc *User) Comment(ctx context.Context, ecoID uint, userID uint, photoComme
 	tmp := ecotourism.Rating*float64(ecotourism.TotalRatings) + rating
 	totalRating := tmp / float64(totalReview)
 
-	ecotourism = entity.Ecotourism{
-		TotalRatings: totalReview,
-		Rating:       numeric.RoundingRating(totalRating),
-		Comment:      append(ecotourism.Comment, comment),
-	}
+	ecotourism.TotalRatings = totalReview
+	ecotourism.Rating = numeric.RoundingRating(totalRating)
+	ecotourism.Comment = append(ecotourism.Comment, comment)
 
 	ecotourism, err = uc.ecoRepo.Update(ctx, ecotourism)
 

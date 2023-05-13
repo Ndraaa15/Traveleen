@@ -51,3 +51,8 @@ type PurchaseResponse struct {
 	PaymentType string `json:"payment_type"`
 	URL         string `json:"url"`
 }
+
+type ExchangeTrash struct {
+	Category string  `json:"category"`
+	Mass     float64 `json:"mass"`
+}

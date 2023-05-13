@@ -16,8 +16,6 @@ type UserInterface interface {
 	GetByID(ctx context.Context, userID uint) (entity.User, error)
 	UploadPhotoProfile(PhotoUser *multipart.FileHeader) (string, error)
 	UploadPhotoComment(PhotoComment []*multipart.FileHeader) ([]string, error)
-	Comment(ctx context.Context, comment entity.Comment) (entity.Comment, error)
-
 	Delete(ctx context.Context, user entity.User) error
 }
 
