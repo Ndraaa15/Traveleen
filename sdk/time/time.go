@@ -61,7 +61,6 @@ func GenerateDate() string {
 
 func GenerateTime() string {
 	t := time.Now()
-	formattedTime := t.Format("15:04:05")
-	time := formattedTime[:5]
-	return time
+	formattedTime := t.Format("15:04")
+	return formattedTime
 }
