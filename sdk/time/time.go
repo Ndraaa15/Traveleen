@@ -2,6 +2,7 @@ package time
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -62,5 +63,18 @@ func GenerateDate() string {
 func GenerateTime() string {
 	t := time.Now()
 	formattedTime := t.Format("15:04")
-	return formattedTime
+
+	timeParts := strings.Split(formattedTime, ":")
+
+	hour, err := strconv.Atoi(timeParts[0])
+
+	if err != nil {
+		return ""
+	}
+
+	hour = hour + 7
+
+	time := fmt.Sprintf("%d:%s", hour, timeParts[1])
+
+	return time
 }
