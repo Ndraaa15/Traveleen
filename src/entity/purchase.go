@@ -12,6 +12,10 @@ type Purchase struct {
 	Code        string           `json:"code"`
 	Status      enum.Status      `json:"status"`
 	PayCategory enum.PayCategory `json:"pay_category"`
+	EcoName     string           `json:"eco_name"`
+	EcoCategory enum.EcoCategory `json:"eco_category"`
+	EcoLocation string           `json:"eco_location"`
+	EcoImage    string           `json:"eco_image"`
 	UserID      uint             `json:"user_id"`
 	User        User             `json:"-" gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE"`
 }

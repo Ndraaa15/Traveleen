@@ -626,6 +626,10 @@ func (uc *Usecase) GenerateUserDummy(db *mysql.DB) {
 			Code:        "G15HIHJ7",
 			Status:      enum.Berhasil,
 			PayCategory: enum.Online,
+			EcoName:     "Nusa Dua",
+			EcoCategory: enum.Pantai,
+			EcoLocation: "Bali",
+			EcoImage:    "https://arcudskzafkijqukfool.supabase.co/storage/v1/object/public/traveleen/images/nd1.png",
 			UserID:      1,
 		},
 		{
@@ -638,6 +642,10 @@ func (uc *Usecase) GenerateUserDummy(db *mysql.DB) {
 			Code:        "-",
 			Status:      enum.Menunggu,
 			PayCategory: enum.Coin,
+			EcoName:     "Agung",
+			EcoCategory: enum.Gunung,
+			EcoLocation: "Bali",
+			EcoImage:    "https://arcudskzafkijqukfool.supabase.co/storage/v1/object/public/traveleen/images/ag1.jpeg",
 			UserID:      1,
 		},
 	}

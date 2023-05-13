@@ -75,6 +75,10 @@ func (uc *Purchase) Payment(ctx context.Context, userID uint, paymentType model.
 				Code:        "-",
 				Status:      enum.Menunggu,
 				PayCategory: enum.Online,
+				EcoName:     product.EcoName,
+				EcoCategory: product.EcoCategory,
+				EcoLocation: product.EcoLocation,
+				EcoImage:    product.EcoImage,
 				UserID:      userID,
 			}
 
@@ -121,6 +125,10 @@ func (uc *Purchase) Payment(ctx context.Context, userID uint, paymentType model.
 				Code:        "-",
 				Status:      enum.Menunggu,
 				PayCategory: enum.Coin,
+				EcoName:     product.EcoName,
+				EcoCategory: product.EcoCategory,
+				EcoLocation: product.EcoLocation,
+				EcoImage:    product.EcoImage,
 				UserID:      userID,
 			}
 
