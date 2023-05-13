@@ -29,34 +29,36 @@ func InitTrash(trashRepo repository.TrashInterface, userRepo repository.UserInte
 
 func (uc *Trash) Exchange(ctx context.Context, newTrash model.ExchangeTrash, userID uint) (entity.Trash, error) {
 	var trash entity.Trash
+	var category enum.TrashCategory
 
 	exchangeTotal := newTrash.Mass
 
 	if newTrash.Category == "Plastik" {
-		trash.Category = enum.Plastik
+		category = enum.Plastik
 		exchangeTotal *= 2000
 	} else if newTrash.Category == "Kaca" {
-		trash.Category = enum.Kaca
+		category = enum.Kaca
 		exchangeTotal *= 5000
 	} else if newTrash.Category == "Kertas" {
-		trash.Category = enum.Kertas
+		category = enum.Kertas
 		exchangeTotal *= 1000
-	} else if newTrash.Category == "Eletronik" {
-		trash.Category = enum.Elektronik
+	} else if newTrash.Category == "Elektronik" {
+		category = enum.Elektronik
 		exchangeTotal *= 25000
 	} else if newTrash.Category == "Metal" {
-		trash.Category = enum.Metal
+		category = enum.Metal
 		exchangeTotal *= 15000
 	} else if newTrash.Category == "Kardus" {
-		trash.Category = enum.Kardus
+		category = enum.Kardus
 		exchangeTotal *= 7000
 	} else if newTrash.Category == "Organik" {
-		trash.Category = enum.Organik
+		category = enum.Organik
 		exchangeTotal *= 2000
 	}
 
 	trash = entity.Trash{
 		Location:      "-",
+		Category:      category,
 		Mass:          newTrash.Mass,
 		Code:          token.GenerateToken(),
 		Status:        enum.Menunggu,
