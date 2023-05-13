@@ -10,11 +10,15 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 var Router *gin.Engine
 
 func main() {
+	if err := godotenv.Load(); err != nil {
+		log.Fatal(err.Error())
+	}
 	db, err := mysql.SqlInit()
 
 	if err != nil {

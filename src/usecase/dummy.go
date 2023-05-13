@@ -582,6 +582,7 @@ func (uc *Usecase) GenerateUserDummy(db *mysql.DB) {
 	var trashes = []entity.Trash{
 		{
 			ID:            1,
+			Date:          "Selasa, 15 Desember 2022",
 			Category:      enum.Kertas,
 			Location:      "Pantai Kuta, Bali",
 			Mass:          10,
@@ -592,6 +593,7 @@ func (uc *Usecase) GenerateUserDummy(db *mysql.DB) {
 		},
 		{
 			ID:            2,
+			Date:          "-",
 			Category:      enum.Kaca,
 			Location:      "-",
 			Mass:          5,
@@ -602,6 +604,7 @@ func (uc *Usecase) GenerateUserDummy(db *mysql.DB) {
 		},
 		{
 			ID:            3,
+			Date:          "-",
 			Category:      enum.Kaca,
 			Location:      "-",
 			Mass:          5,
