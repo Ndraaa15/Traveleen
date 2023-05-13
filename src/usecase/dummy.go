@@ -616,6 +616,7 @@ func (uc *Usecase) GenerateUserDummy(db *mysql.DB) {
 		{
 			ID:          1,
 			Date:        "Selasa, 15 Desember 2022",
+			Time:        "15:04",
 			Place:       "Pantai Nusa Dua, Bali",
 			Quantity:    1,
 			TotalPrice:  10000,
@@ -627,6 +628,7 @@ func (uc *Usecase) GenerateUserDummy(db *mysql.DB) {
 		{
 			ID:          2,
 			Date:        "Senin, 17 Agustus 2022",
+			Time:        "22:00",
 			Place:       "Gunung Agung, Bali",
 			Quantity:    1,
 			TotalPrice:  150000,

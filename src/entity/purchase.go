@@ -5,6 +5,7 @@ import "gin/src/enum"
 type Purchase struct {
 	ID          uint             `json:"id" gorm:"primarykey, unique"`
 	Date        string           `json:"date"`
+	Time        string           `json:"time"`
 	Place       string           `json:"place"`
 	Quantity    uint             `json:"quantity"`
 	TotalPrice  float64          `json:"total_price"`

@@ -33,6 +33,7 @@ func InitPurchase(purchaseRepo repository.PurchaseInterface, userRepo repository
 func (uc *Purchase) Payment(ctx context.Context, userID uint, paymentType model.PaymentType) (model.PurchaseResponse, error) {
 	var purchase entity.Purchase
 	var purchaseResponse model.PurchaseResponse
+	var clock = time.GenerateTime()
 	URL := "-"
 
 	user, err := uc.userRepo.GetByID(ctx, userID)
@@ -67,6 +68,7 @@ func (uc *Purchase) Payment(ctx context.Context, userID uint, paymentType model.
 		for _, product := range cart.CartProduct {
 			purchase = entity.Purchase{
 				Date:        time.GenerateDate(),
+				Time:        clock,
 				Place:       product.EcoName + ", " + product.EcoLocation,
 				Quantity:    product.Quantity,
 				TotalPrice:  product.Price,
@@ -112,6 +114,7 @@ func (uc *Purchase) Payment(ctx context.Context, userID uint, paymentType model.
 		for _, product := range cart.CartProduct {
 			purchase = entity.Purchase{
 				Date:        time.GenerateDate(),
+				Time:        clock,
 				Place:       product.EcoName + ", " + product.EcoLocation,
 				Quantity:    product.Quantity,
 				TotalPrice:  product.Price,
