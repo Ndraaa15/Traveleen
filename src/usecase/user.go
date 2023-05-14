@@ -139,9 +139,16 @@ func (uc *User) Update(ctx context.Context, userInput model.UserUpdate, userID u
 }
 
 func (uc *User) UploadPhotoProfile(ctx context.Context, userID uint, photoProfile *multipart.FileHeader) (entity.User, error) {
-	linkPhoto, err := uc.userRepo.UploadPhotoProfile(photoProfile)
-	if err != nil {
-		return entity.User{}, errors.New("FAILED TO UPLOAD PHOTO")
+	var photo string
+
+	if photoProfile == nil {
+		photo = ""
+	} else {
+		linkPhoto, err := uc.userRepo.UploadPhotoProfile(photoProfile)
+		if err != nil {
+			return entity.User{}, errors.New("FAILED TO UPLOAD PHOTO")
+		}
+		photo = linkPhoto
 	}
 
 	user, err := uc.userRepo.GetByID(ctx, userID)
@@ -149,7 +156,7 @@ func (uc *User) UploadPhotoProfile(ctx context.Context, userID uint, photoProfil
 		return entity.User{}, errors.New("USER NOT FOUND")
 	}
 
-	user.PhotoProfile = linkPhoto
+	user.PhotoProfile = photo
 
 	userUpdate, err := uc.userRepo.Update(ctx, user)
 

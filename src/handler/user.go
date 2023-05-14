@@ -138,7 +138,7 @@ func (h *Handler) UploadComment(ctx *gin.Context) {
 
 	photoComment = append(photoComment, files...)
 
-	if len(photoComment) == 0 && len(data) == 0 {
+	if len(photoComment) == 0 && len(data) < 2 {
 		message.ErrorResponse(ctx, http.StatusBadRequest, "Please fill some column", nil)
 		return
 	}

@@ -2,6 +2,7 @@ package midtrans
 
 import (
 	"gin/src/entity"
+
 	"os"
 
 	"github.com/midtrans/midtrans-go"
@@ -51,7 +52,29 @@ func GenerateSnapReq(user entity.User, cart entity.Cart) *snap.Request {
 			BillAddr: custAddress,
 			ShipAddr: custAddress,
 		},
-		EnabledPayments: snap.AllSnapPaymentType,
+		EnabledPayments: []snap.SnapPaymentType{
+			snap.PaymentTypeAkulaku,
+			snap.PaymentTypeAlfamart,
+			snap.PaymentTypeBankTransfer,
+			snap.PaymentTypeBCAKlikpay,
+			snap.PaymentTypeBCAVA,
+			snap.PaymentTypeBNIVA,
+			snap.PaymentTypeBRIEpay,
+			snap.PaymentTypeBRIVA,
+			snap.PaymentTypeCimbClicks,
+			snap.PaymentTypeConvenienceStore,
+			snap.PaymentTypeCreditCard,
+			snap.PaymentTypeDanamonOnline,
+			snap.PaymentTypeEChannel,
+			snap.PaymentTypePermataVA,
+			snap.PaymentTypeIndomaret,
+			snap.PaymentTypeKioson,
+			snap.PaymentTypeKlikBca,
+			snap.PaymentTypeMandiriClickpay,
+			snap.PaymentTypeMandiriEcash,
+			snap.PaymentTypeOtherVA,
+			snap.PaymentTypeTelkomselCash,
+		},
 	}
 	return snapReq
 }
