@@ -93,16 +93,6 @@ func (h *Handler) UploadPhotoProfile(ctx *gin.Context) {
 		photo = nil
 	}
 
-	// if err != nil {
-	// 	message.ErrorResponse(ctx, http.StatusUnsupportedMediaType, "Failed to get file!", err.Error())
-	// 	return
-	// }
-
-	// if photoUser == nil {
-	// 	message.ErrorResponse(ctx, http.StatusUnsupportedMediaType, "Please select a photo!", nil)
-	// 	return
-	// }
-
 	userUpdate, err := h.uc.User.UploadPhotoProfile(ctx, userID, photo)
 
 	if err != nil {
