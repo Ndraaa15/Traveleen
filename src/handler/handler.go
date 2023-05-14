@@ -43,7 +43,6 @@ func (h *Handler) RoutesAndMiddleware() {
 	user.POST("/login", h.UserLogin)
 	user.Use(middleware.IsUserLoggedIn).
 		GET("/profile", h.GetProfile).
-		DELETE("/delete", h.DeleteAccount).
 		PUT("/update", h.UserUpdate).
 		POST("/upload/photo", h.UploadPhotoProfile).
 		GET("/cart", h.GetCart).

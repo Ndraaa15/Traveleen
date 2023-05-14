@@ -22,7 +22,6 @@ type UserInterface interface {
 	Register(ctx context.Context, userInput model.UserRegister) (entity.User, error)
 	Login(ctx context.Context, userInput model.UserLogin) (model.UserLoginResponse, error)
 	Update(ctx context.Context, userInput model.UserUpdate, userID uint) (entity.User, error)
-	Delete(ctx context.Context, userID uint) error
 	UploadPhotoProfile(ctx context.Context, userID uint, photoProfile *multipart.FileHeader) (entity.User, error)
 	Profile(ctx context.Context, userID uint) (entity.User, error)
 	Comment(ctx context.Context, ecoID uint, userID uint, photoComment []*multipart.FileHeader, data []string) (entity.Ecotourism, error)
@@ -174,20 +173,6 @@ func (uc *User) Profile(ctx context.Context, userID uint) (entity.User, error) {
 	}
 
 	return user, nil
-}
-
-func (uc *User) Delete(ctx context.Context, userID uint) error {
-	user, err := uc.userRepo.GetByID(ctx, userID)
-	if err != nil {
-		return err
-	}
-
-	err = uc.userRepo.Delete(ctx, user)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func (uc *User) Comment(ctx context.Context, ecoID uint, userID uint, photoComment []*multipart.FileHeader, data []string) (entity.Ecotourism, error) {

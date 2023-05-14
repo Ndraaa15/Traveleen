@@ -16,7 +16,6 @@ type UserInterface interface {
 	GetByID(ctx context.Context, userID uint) (entity.User, error)
 	UploadPhotoProfile(PhotoUser *multipart.FileHeader) (string, error)
 	UploadPhotoComment(PhotoComment []*multipart.FileHeader) ([]string, error)
-	Delete(ctx context.Context, user entity.User) error
 }
 
 type User struct {
@@ -52,13 +51,6 @@ func (r *User) Update(ctx context.Context, user entity.User) (entity.User, error
 		return user, err
 	}
 	return user, nil
-}
-
-func (r *User) Delete(ctx context.Context, user entity.User) error {
-	if err := r.sql.Debug().WithContext(ctx).Delete(&user).Error; err != nil {
-		return err
-	}
-	return nil
 }
 
 func (r *User) GetByID(ctx context.Context, userID uint) (entity.User, error) {

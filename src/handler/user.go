@@ -170,23 +170,3 @@ func (h *Handler) GetProfile(ctx *gin.Context) {
 
 	message.SuccessResponse(ctx, http.StatusOK, "User found!", &user)
 }
-
-func (h *Handler) DeleteAccount(ctx *gin.Context) {
-	user, exist := ctx.Get("user")
-
-	if !exist {
-		message.ErrorResponse(ctx, http.StatusUnauthorized, "Failed to get JWT token!", nil)
-		return
-	}
-
-	userID := user.(uint)
-
-	err := h.uc.User.Delete(ctx.Request.Context(), userID)
-
-	if err != nil {
-		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to delete account", err.Error())
-		return
-	}
-
-	message.SuccessResponse(ctx, http.StatusOK, "Account deleted", nil)
-}
