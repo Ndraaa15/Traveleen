@@ -9,17 +9,17 @@ import (
 )
 
 func (h *Handler) Payment(ctx *gin.Context) {
-	var paymentType model.PaymentType
-
-	if err := ctx.ShouldBindJSON(&paymentType); err != nil {
-		message.ErrorResponse(ctx, http.StatusUnprocessableEntity, "Failed to bind JSON", err.Error())
-		return
-	}
-
 	user, exist := ctx.Get("user")
 
 	if !exist {
 		message.ErrorResponse(ctx, http.StatusUnauthorized, "Failed to get JWT token!", nil)
+		return
+	}
+
+	var paymentType model.PaymentType
+
+	if err := ctx.ShouldBindJSON(&paymentType); err != nil {
+		message.ErrorResponse(ctx, http.StatusUnprocessableEntity, "Failed to bind JSON", err.Error())
 		return
 	}
 

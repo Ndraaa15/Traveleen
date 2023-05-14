@@ -32,7 +32,7 @@ func (h *Handler) ExchangeTrash(ctx *gin.Context) {
 		return
 	}
 
-	message.SuccessResponse(ctx, http.StatusOK, "Success exchange trash", trash)
+	message.SuccessResponse(ctx, http.StatusOK, "Success exchange trash", &trash)
 
 }
 
@@ -53,5 +53,5 @@ func (h *Handler) ExchangeTrashHistory(ctx *gin.Context) {
 		return
 	}
 
-	message.SuccessResponse(ctx, http.StatusOK, "History Found", trashes)
+	message.SuccessResponse(ctx, http.StatusOK, "History Found", &trashes)
 }

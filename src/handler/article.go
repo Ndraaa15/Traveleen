@@ -12,7 +12,7 @@ func (h *Handler) CreateArticle(ctx *gin.Context) {
 	user, exist := ctx.Get("user")
 
 	if !exist {
-		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to load JWT token, please try again!", nil)
+		message.ErrorResponse(ctx, http.StatusUnauthorized, "Failed to load JWT token, please try again!", nil)
 		return
 	}
 
@@ -43,11 +43,11 @@ func (h *Handler) GetAllArticles(ctx *gin.Context) {
 	articles, err := h.uc.Article.GetAll(ctx.Request.Context())
 
 	if err != nil {
-		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to load articles!", err.Error())
+		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to get articles!", err.Error())
 		return
 	}
 
-	message.SuccessResponse(ctx, http.StatusOK, "Success upload article", &articles)
+	message.SuccessResponse(ctx, http.StatusOK, "Articles found!", &articles)
 }
 
 func (h *Handler) GetArticleByID(ctx *gin.Context) {
@@ -63,9 +63,9 @@ func (h *Handler) GetArticleByID(ctx *gin.Context) {
 	article, err := h.uc.Article.GetByID(ctx.Request.Context(), uint(id))
 
 	if err != nil {
-		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to load article", err.Error())
+		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to get article", err.Error())
 		return
 	}
 
-	message.SuccessResponse(ctx, http.StatusOK, "Success upload article", &article)
+	message.SuccessResponse(ctx, http.StatusOK, "Article found!", &article)
 }

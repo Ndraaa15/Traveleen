@@ -19,7 +19,7 @@ func GenerateJWTToken(user entity.User) (string, error) {
 
 	signedToken, err := token.SignedString([]byte(os.Getenv("JWT_SIGN")))
 	if err != nil {
-		return "", err
+		return "", errors.New("FAILED TO GENERATE JWT TOKEN")
 	}
 
 	return signedToken, nil
@@ -37,7 +37,7 @@ func DecodeJWTToken(token string) (map[string]interface{}, error) {
 	claims, ok := decoded.Claims.(jwt.MapClaims)
 
 	if !ok {
-		return nil, errors.New("failed to decode JWT Token")
+		return nil, errors.New("FAILED TO DECODE JWT TOKEN")
 	}
 	if !decoded.Valid {
 		return nil, errors.New("invalid JWT Token")

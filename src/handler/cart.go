@@ -62,7 +62,7 @@ func (h *Handler) GetCart(ctx *gin.Context) {
 		return
 	}
 
-	message.SuccessResponse(ctx, http.StatusOK, "Cart found!", cart)
+	message.SuccessResponse(ctx, http.StatusOK, "Cart found!", &cart)
 }
 
 func (h *Handler) DeleteCartContent(ctx *gin.Context) {
