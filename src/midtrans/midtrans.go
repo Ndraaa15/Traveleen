@@ -2,6 +2,7 @@ package midtrans
 
 import (
 	"gin/src/entity"
+	"os"
 
 	"github.com/midtrans/midtrans-go"
 	"github.com/midtrans/midtrans-go/example"
@@ -11,13 +12,13 @@ import (
 var s snap.Client
 
 func InitializeSnapClient() {
-	s.New(example.SandboxServerKey1, midtrans.Sandbox)
+	s.New(os.Getenv("SERVER_KEY"), midtrans.Sandbox)
 }
 
 func CreateTransaction(user entity.User, cart entity.Cart) (*snap.Response, error) {
-	s.Options.SetPaymentAppendNotification("https://example.com/append")
+	s.Options.SetPaymentAppendNotification("https://traveleen.vercel.app/history")
 
-	s.Options.SetPaymentOverrideNotification("https://example.com/override")
+	s.Options.SetPaymentOverrideNotification("https://traveleen.vercel.app/history")
 
 	resp, err := s.CreateTransaction(GenerateSnapReq(user, cart))
 	if err != nil {

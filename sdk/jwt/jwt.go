@@ -13,7 +13,7 @@ func GenerateJWTToken(user entity.User) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"sub": user.Username,
-		"exp": time.Now().Add(time.Minute * 30).Unix(),
+		"exp": time.Now().Add(time.Hour * 1).Unix(),
 		"id":  user.ID,
 	})
 
