@@ -26,7 +26,7 @@ type UserUpdate struct {
 	Username string `json:"username" gorm:"unique"`
 	Email    string `json:"email" gorm:"unique"`
 	Password string `json:"password"`
-	Contact  string `json:"contact"`
+	Contact  string `json:"contact" gorm:"unique"`
 	Region   string `json:"region"`
 	Gender   bool   `json:"gender"`
 	Birthday string `json:"birthday"`

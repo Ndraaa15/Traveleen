@@ -11,7 +11,7 @@ type User struct {
 	Password     string      `json:"-"`
 	Wallet       float64     `json:"wallet" `
 	PhotoProfile string      `json:"photo_profile"`
-	Contact      string      `json:"contact" gorm:"unique"`
+	Contact      string      `json:"contact"`
 	Region       string      `json:"region"`
 	Gender       enum.Gender `json:"gender"`
 	Birthday     string      `json:"birthday"`
