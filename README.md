@@ -1,6 +1,7 @@
 # 🌳 Traveleen - FIND IT 2023
 
-<img width="1100" alt="Banner Traveleen" src="https://github.com/Ndraaa15/Traveleen/assets/112854205/47b92128-c9f3-4e11-b31f-89af9a8c33fc">
+<img width="1100" alt="Banner Traveleen" src="https://github.com/Ndraaa15/Traveleen/assets/112854205/3253ed57-d02f-4b42-a7e3-3ac38ad1bbe9">
+
 
 # ✨ Description
 
