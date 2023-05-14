@@ -185,23 +185,24 @@ func (uc *User) Delete(ctx context.Context, userID uint) error {
 
 func (uc *User) Comment(ctx context.Context, ecoID uint, userID uint, photoComment []*multipart.FileHeader, data []string) (entity.Ecotourism, error) {
 	var comment entity.Comment
+
 	var photos datatypes.JSON
 
-	linkPhoto, err := uc.userRepo.UploadPhotoComment(photoComment)
-
-	if err != nil {
-		return entity.Ecotourism{}, errors.New("FAILED TO UPLOAD PHOTO")
-	}
-
-	jsonLinkPhoto, err := json.Marshal(linkPhoto)
-
-	if err != nil {
-		return entity.Ecotourism{}, errors.New("FAILED TO MARSHAL JSON")
-	}
-
-	if len(jsonLinkPhoto) == 0 {
+	if len(photoComment) == 0 {
 		photos = nil
 	} else {
+		linkPhoto, err := uc.userRepo.UploadPhotoComment(photoComment)
+
+		if err != nil {
+			return entity.Ecotourism{}, errors.New("FAILED TO UPLOAD PHOTO")
+		}
+
+		jsonLinkPhoto, err := json.Marshal(linkPhoto)
+
+		if err != nil {
+			return entity.Ecotourism{}, errors.New("FAILED TO MARSHAL JSON")
+		}
+
 		photos = jsonLinkPhoto
 	}
 
