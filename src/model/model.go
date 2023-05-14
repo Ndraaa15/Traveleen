@@ -8,12 +8,12 @@ import (
 
 type UserRegister struct {
 	Username string `json:"username" gorm:"unique" binding:"required"`
-	Email    string `json:"email" gorm:"unique" binding:"required, email"`
-	Password string `json:"password" binding:"required, e164"`
+	Email    string `json:"email" gorm:"unique" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }
 
 type UserLogin struct {
-	Email    string `json:"email" binding:"required, email"`
+	Email    string `json:"email" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
 
