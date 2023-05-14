@@ -14,6 +14,8 @@ import (
 	"gin/src/repository"
 	"mime/multipart"
 	"strconv"
+
+	"gorm.io/datatypes"
 )
 
 type UserInterface interface {
@@ -183,6 +185,7 @@ func (uc *User) Delete(ctx context.Context, userID uint) error {
 
 func (uc *User) Comment(ctx context.Context, ecoID uint, userID uint, photoComment []*multipart.FileHeader, data []string) (entity.Ecotourism, error) {
 	var comment entity.Comment
+	var photos datatypes.JSON
 
 	linkPhoto, err := uc.userRepo.UploadPhotoComment(photoComment)
 
@@ -194,6 +197,12 @@ func (uc *User) Comment(ctx context.Context, ecoID uint, userID uint, photoComme
 
 	if err != nil {
 		return entity.Ecotourism{}, errors.New("FAILED TO MARSHAL JSON")
+	}
+
+	if len(jsonLinkPhoto) == 0 {
+		photos = nil
+	} else {
+		photos = jsonLinkPhoto
 	}
 
 	rating, err := strconv.ParseFloat(data[0], 64)
@@ -215,7 +224,7 @@ func (uc *User) Comment(ctx context.Context, ecoID uint, userID uint, photoComme
 		EcotourismID: ecoID,
 		Rating:       rating,
 		Body:         data[1],
-		Thumbnail:    jsonLinkPhoto,
+		Thumbnail:    photos,
 	}
 
 	ecotourism, err := uc.ecoRepo.GetByID(ctx, ecoID)

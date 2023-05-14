@@ -7,5 +7,5 @@ type Article struct {
 	Title     string `json:"title"`
 	Body      string `json:"body"`
 	UserID    uint   `json:"user_id"`
-	User      User   `json:"-" gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE"`
+	User      User   `json:"-" gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE;"`
 }

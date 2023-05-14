@@ -5,7 +5,7 @@ import "gin/src/enum"
 type Cart struct {
 	ID          uint          `json:"id" gorm:"primarykey"`
 	UserID      uint          `json:"user_id"`
-	User        User          `json:"-" gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE"`
+	User        User          `json:"-" gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE;"`
 	CartProduct []CartProduct `json:"cart_product"`
 	TotalPrice  float64       `json:"total_price"`
 }

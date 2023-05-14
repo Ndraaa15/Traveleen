@@ -8,12 +8,12 @@ import (
 
 type UserRegister struct {
 	Username string `json:"username" gorm:"unique" binding:"required"`
-	Email    string `json:"email" gorm:"unique" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	Email    string `json:"email" gorm:"unique" binding:"required, email"`
+	Password string `json:"password" binding:"required, e164"`
 }
 
 type UserLogin struct {
-	Email    string `json:"email" binding:"required"`
+	Email    string `json:"email" binding:"required, email"`
 	Password string `json:"password" binding:"required"`
 }
 
@@ -33,8 +33,8 @@ type UserUpdate struct {
 }
 
 type UserComment struct {
-	Rating    float64        `json:"rating"`
-	Body      string         `json:"body"`
+	Rating    float64        `json:"rating" binding:"required"`
+	Body      string         `json:"body"  binding:"required"`
 	Thumbnail datatypes.JSON `json:"thumbnail" gorm:"type:json"`
 }
 

@@ -17,5 +17,5 @@ type Purchase struct {
 	EcoLocation string           `json:"eco_location"`
 	EcoImage    string           `json:"eco_image"`
 	UserID      uint             `json:"user_id"`
-	User        User             `json:"-" gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE"`
+	User        User             `json:"-" gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE;"`
 }

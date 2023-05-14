@@ -72,9 +72,15 @@ func GenerateTime() string {
 		return ""
 	}
 
-	hour = hour + 7
+	hour = (hour + 7) % 24
+	var hourStr string
+	if hour < 10 {
+		hourStr = fmt.Sprintf("0%d", hour)
+	} else {
+		hourStr = fmt.Sprintf("%d", hour)
+	}
 
-	time := fmt.Sprintf("%d:%s", hour, timeParts[1])
+	time := fmt.Sprintf("%s:%s", hourStr, timeParts[1])
 
 	return time
 }
