@@ -81,21 +81,29 @@ func (h *Handler) UploadPhotoProfile(ctx *gin.Context) {
 		return
 	}
 
+	var photo *multipart.FileHeader
+
 	userID := user.(uint)
 
-	photoUser, err := ctx.FormFile("photoProfile")
+	photoUser, _ := ctx.FormFile("photoProfile")
 
-	if err != nil {
-		message.ErrorResponse(ctx, http.StatusUnsupportedMediaType, "Failed to get file!", err.Error())
-		return
+	if photoUser != nil {
+		photo = photoUser
+	} else {
+		photo = nil
 	}
 
-	if photoUser == nil {
-		message.ErrorResponse(ctx, http.StatusUnsupportedMediaType, "Please select a photo!", nil)
-		return
-	}
+	// if err != nil {
+	// 	message.ErrorResponse(ctx, http.StatusUnsupportedMediaType, "Failed to get file!", err.Error())
+	// 	return
+	// }
 
-	userUpdate, err := h.uc.User.UploadPhotoProfile(ctx, userID, photoUser)
+	// if photoUser == nil {
+	// 	message.ErrorResponse(ctx, http.StatusUnsupportedMediaType, "Please select a photo!", nil)
+	// 	return
+	// }
+
+	userUpdate, err := h.uc.User.UploadPhotoProfile(ctx, userID, photo)
 
 	if err != nil {
 		message.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to upload photo profile!", err.Error())
